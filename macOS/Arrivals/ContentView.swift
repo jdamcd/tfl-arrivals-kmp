@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+        
     var body: some View {
         VStack {
             Image(systemName: "tram.fill")
@@ -9,6 +10,7 @@ struct ContentView: View {
             Text("TFL Arrivals")
         }
         .padding()
+        .frame(width: 300, height: 100)
     }
 }
 
