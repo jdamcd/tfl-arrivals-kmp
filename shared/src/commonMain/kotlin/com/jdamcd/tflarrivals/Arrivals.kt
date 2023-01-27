@@ -13,8 +13,10 @@ class Arrivals {
                 station = "910GSHRDHST",
                 direction = "outbound"
             )
-            arrivals.take(3)
-                .map { Arrival(it.destinationName, formatTime(it.timeToStation)) }
+            arrivals
+                .sortedBy { it.timeToStation }
+                .take(3)
+                .map { Arrival(it.id, it.destinationName, formatTime(it.timeToStation)) }
         } catch (e: Exception) {
             println(e.message)
             emptyList()
@@ -23,8 +25,11 @@ class Arrivals {
 }
 
 data class Arrival(
+    val id: Int,
     val destination: String,
     val time: String
 )
 
-private fun formatTime(seconds: Int) = "${(seconds / 60f).roundToInt()}min"
+private fun formatTime(seconds: Int) =
+    if (seconds < 60) "Due"
+    else "${(seconds / 60f).roundToInt()} min"

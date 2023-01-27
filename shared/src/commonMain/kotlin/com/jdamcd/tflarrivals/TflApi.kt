@@ -33,6 +33,7 @@ internal class TflApi {
 
 @Serializable
 data class ApiArrivals(
+    val id: Int,
     val destinationName: String,
     val timeToStation: Int
 )
