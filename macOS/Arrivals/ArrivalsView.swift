@@ -1,5 +1,6 @@
 import SwiftUI
 import TflArrivals
+import Foundation
 
 struct ArrivalsView: View {
     
@@ -12,13 +13,15 @@ struct ArrivalsView: View {
                 ProgressView()
                     .scaleEffect(0.5)
             case let .data(arrivalsList) :
-                VStack {
+                VStack(spacing: 0) {
                     ArrivalListView(arrivals: arrivalsList)
-                    Spacer()
+                    ControlFooter() {
+                        viewModel.load()
+                    }
                 }
             }
         }
-        .frame(width: 350, height: 100)
+        .frame(width: 350, height: 106)
         .onAppear {
             viewModel.load()
         }
@@ -26,7 +29,7 @@ struct ArrivalsView: View {
 }
 
 private struct ArrivalListView: View {
-    
+
     var arrivals: [Arrival]
     
     var body: some View {
@@ -52,12 +55,37 @@ private struct ArrivalListView: View {
     }
 }
 
+private struct ControlFooter: View {
+    
+    var refresh: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 10){
+            Spacer()
+            Button {
+                refresh()
+            } label: {
+                Image(systemName: "arrow.clockwise.circle.fill")
+            }.buttonStyle(PlainButtonStyle())
+                .frame(width: 6, height: 6)
+        
+            Button {
+                NSApp.terminate(self)
+            } label: {
+                Image(systemName: "x.circle.fill")
+            }.buttonStyle(PlainButtonStyle())
+                .frame(width: 6, height: 6)
+            Spacer()
+        }.padding(.bottom, 8)
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let arrivals = [
-            Arrival(id: 1, destination: "Clapham Junction", time: "2mins"),
-            Arrival(id: 2, destination: "New Cross", time: "7mins"),
-            Arrival(id: 3, destination: "Crystal Palace", time: "11mins")
+            Arrival(id: 1, destination: "Clapham Junction", time: "2 min"),
+            Arrival(id: 2, destination: "New Cross", time: "7 min"),
+            Arrival(id: 3, destination: "Crystal Palace", time: "11 min")
         ]
         
         ArrivalListView(arrivals: arrivals)
