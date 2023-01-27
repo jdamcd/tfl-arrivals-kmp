@@ -1,13 +1,12 @@
 import SwiftUI
+import TflArrivals
 
 struct ContentView: View {
         
     var body: some View {
         VStack {
-            Image(systemName: "tram.fill")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("TFL Arrivals")
+            Text("TFL Arrivals").font(.custom("LondonUnderground", size: 20))
+                .foregroundColor(.yellow)
         }
         .padding()
         .frame(width: 300, height: 100)

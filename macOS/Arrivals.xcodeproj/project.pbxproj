@@ -11,6 +11,7 @@
 		4938625C297F4BE700C61AE3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4938625B297F4BE700C61AE3 /* ContentView.swift */; };
 		4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4938625D297F4BE900C61AE3 /* Assets.xcassets */; };
 		49386261297F4BE900C61AE3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49386260297F4BE900C61AE3 /* Preview Assets.xcassets */; };
+		49386288298348A100C61AE3 /* LUR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49386287298348A100C61AE3 /* LUR.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,8 @@
 		49386262297F4BE900C61AE3 /* Arrivals.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Arrivals.entitlements; sourceTree = "<group>"; };
 		49386267297F4BE900C61AE3 /* ArrivalsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArrivalsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49386271297F4BE900C61AE3 /* ArrivalsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArrivalsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		493862862983404100C61AE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		49386287298348A100C61AE3 /* LUR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LUR.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +90,8 @@
 		49386258297F4BE700C61AE3 /* Arrivals */ = {
 			isa = PBXGroup;
 			children = (
+				49386287298348A100C61AE3 /* LUR.ttf */,
+				493862862983404100C61AE3 /* Info.plist */,
 				49386259297F4BE700C61AE3 /* ArrivalsApp.swift */,
 				4938625B297F4BE700C61AE3 /* ContentView.swift */,
 				4938625D297F4BE900C61AE3 /* Assets.xcassets */,
@@ -111,6 +116,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4938627B297F4BE900C61AE3 /* Build configuration list for PBXNativeTarget "Arrivals" */;
 			buildPhases = (
+				498B00E92983CDE6001E83C4 /* Run Script */,
 				49386252297F4BE700C61AE3 /* Sources */,
 				49386253297F4BE700C61AE3 /* Frameworks */,
 				49386254297F4BE700C61AE3 /* Resources */,
@@ -209,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49386261297F4BE900C61AE3 /* Preview Assets.xcassets in Resources */,
+				49386288298348A100C61AE3 /* LUR.ttf in Resources */,
 				4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,6 +235,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		498B00E92983CDE6001E83C4 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cd \"$SRCROOT/..\"\nif [ -f ~/.zshrc ]; then\n    source ~/.zshrc\nfi\n./gradlew embedAndSignAppleFrameworkForXcode\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		49386252297F4BE700C61AE3 /* Sources */ = {
@@ -393,7 +421,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Arrivals/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Arrivals/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -401,6 +431,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					TflArrivals,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jdamcd.Arrivals;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -419,7 +454,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Arrivals/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Arrivals/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -427,6 +464,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					TflArrivals,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jdamcd.Arrivals;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
