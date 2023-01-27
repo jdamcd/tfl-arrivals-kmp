@@ -3,6 +3,8 @@ package com.jdamcd.tflarrivals
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
@@ -20,11 +22,13 @@ internal class TflApi {
                 }
             )
         }
+        install(Logging) {
+            level = LogLevel.ALL
+        }
     }
 
-    suspend fun fetchArrivals(line: String, station: String, direction: String): List<ApiArrivals> {
+    suspend fun fetchArrivals(line: String, station: String): List<ApiArrivals> {
         return client.get("$BASE_URL/Line/$line/Arrivals/$station") {
-            parameter("direction", direction)
             parameter("app_key", "xxxx")
         }.body()
     }
@@ -35,6 +39,7 @@ internal class TflApi {
 data class ApiArrivals(
     val id: Int,
     val destinationName: String,
+    val platformName: String,
     val timeToStation: Int
 )
 

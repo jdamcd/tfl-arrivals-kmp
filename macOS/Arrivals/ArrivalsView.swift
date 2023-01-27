@@ -10,6 +10,7 @@ struct ArrivalsView: View {
             switch viewModel.state {
             case .loading :
                 ProgressView()
+                    .scaleEffect(0.5)
             case let .data(arrivalsList) :
                 VStack {
                     ArrivalListView(arrivals: arrivalsList)
@@ -17,7 +18,7 @@ struct ArrivalsView: View {
                 }
             }
         }
-        .frame(width: 400, height: 100)
+        .frame(width: 350, height: 100)
         .onAppear {
             viewModel.load()
         }
