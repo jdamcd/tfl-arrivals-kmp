@@ -1,39 +1,60 @@
 package com.jdamcd.tflarrivals
 
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
+
+private const val LINE = "london-overground"
+private const val STATION = "910GSHRDHST"
+private const val PLATFORM = "Platform 2"
 
 class Arrivals {
 
     private val api = TflApi()
 
-    suspend fun fetchArrivals(): List<Arrival> {
-        return try {
-            val arrivals = api.fetchArrivals(
-                line = "london-overground",
-                station = "910GSHRDHST"
-            )
-            arrivals
-                .sortedBy { it.timeToStation }
-                .filter { it.platformName == "Platform 2" }
-                .take(3)
-                .map {
-                    Arrival(
-                        it.id,
-                        formatStation(it.destinationName),
-                        formatTime(it.timeToStation))
-                }
+    @Throws(NoDataException::class, CancellationException::class)
+    suspend fun fetchArrivals(): ArrivalsInfo {
+        try {
+            val model = formatArrivals(api.fetchArrivals(LINE, STATION))
+            if (model.arrivals.isNotEmpty()) {
+                return model
+            } else throw NoDataException("No arrivals found")
         } catch (e: Exception) {
-            println(e.message)
-            emptyList()
+            throw NoDataException(e.message.orEmpty())
         }
     }
+
+    private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
+        val station = formatStation(apiArrivals.firstOrNull()?.stationName.orEmpty())
+        val arrivals = apiArrivals
+            .sortedBy { it.timeToStation }
+            .filter { it.platformName == PLATFORM }
+            .take(3)
+            .map {
+                Arrival(
+                    it.id,
+                    formatStation(it.destinationName),
+                    formatTime(it.timeToStation)
+                )
+            }
+        return ArrivalsInfo(
+            station = station,
+            arrivals = arrivals
+        )
+    }
 }
+
+data class ArrivalsInfo(
+    val station: String,
+    val arrivals: List<Arrival>
+)
 
 data class Arrival(
     val id: Int,
     val destination: String,
     val time: String
 )
+
+class NoDataException(message: String): Throwable(message = message)
 
 private fun formatTime(seconds: Int) =
     if (seconds < 60) "Due"

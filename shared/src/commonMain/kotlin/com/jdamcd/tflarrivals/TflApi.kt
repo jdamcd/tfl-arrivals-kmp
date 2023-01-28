@@ -2,6 +2,7 @@ package com.jdamcd.tflarrivals
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
@@ -14,6 +15,9 @@ import kotlinx.serialization.json.Json
 internal class TflApi {
 
     private val client = HttpClient {
+        install(HttpTimeout) {
+            requestTimeoutMillis = 10_000
+        }
         install(ContentNegotiation) {
             json(
                 Json {
@@ -27,7 +31,7 @@ internal class TflApi {
         }
     }
 
-    suspend fun fetchArrivals(line: String, station: String): List<ApiArrivals> {
+    suspend fun fetchArrivals(line: String, station: String): List<ApiArrival> {
         return client.get("$BASE_URL/Line/$line/Arrivals/$station") {
             parameter("app_key", "xxxx")
         }.body()
@@ -36,10 +40,11 @@ internal class TflApi {
 }
 
 @Serializable
-data class ApiArrivals(
+data class ApiArrival(
     val id: Int,
-    val destinationName: String,
+    val stationName: String,
     val platformName: String,
+    val destinationName: String,
     val timeToStation: Int
 )
 

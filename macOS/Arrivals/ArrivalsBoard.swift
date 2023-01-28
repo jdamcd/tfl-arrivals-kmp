@@ -8,16 +8,18 @@ struct ArrivalsBoard: View {
     var body: some View {
         ZStack {
             switch viewModel.state {
-            case .loading :
+            case .loading:
                 ProgressView()
                     .scaleEffect(0.5)
-            case let .data(arrivals) :
+            case .error:
                 VStack {
-                    NextArrivalsList(arrivals: arrivals)
-                        .padding(.bottom, 4)
-                    ControlFooter() {
-                        viewModel.load()
-                    }
+                    Spacer()
+                    ControlFooter(title: "", refresh: { viewModel.load() })
+                }
+            case let .data(arrivalsInfo):
+                VStack {
+                    NextArrivalsList(arrivals: arrivalsInfo.arrivals)
+                    ControlFooter(title: arrivalsInfo.station, refresh: { viewModel.load() })
                 }
             }
         }
@@ -49,10 +51,15 @@ private struct NextArrivalsList: View {
 }
 
 private struct ControlFooter: View {
+    var title: String
     var refresh: () -> Void
     
     var body: some View {
-        HStack(spacing: 2){
+        HStack(spacing: 2) {
+            Text(title)
+                .font(.footnote)
+                .foregroundColor(Color.gray)
+                .padding(.leading, 2)
             Spacer()
             Button {
                 refresh()
@@ -90,7 +97,7 @@ struct ContentView_Previews: PreviewProvider {
         ]
         
         ArrivalsBoard()
-        ControlFooter(refresh: {})
+        ControlFooter(title: "Station Name", refresh: {})
         NextArrivalsList(arrivals: arrivals)
     }
 }

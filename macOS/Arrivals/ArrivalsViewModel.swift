@@ -9,13 +9,18 @@ class ArrivalsViewModel: ObservableObject {
     
     func load() {
         Task {
-            let result = try await fetcher.fetchArrivals()
-            state = .data(result)
+            do {
+                let result = try await fetcher.fetchArrivals()
+                state = .data(result)
+            } catch {
+                state = .error
+            }
         }
     }
 }
 
 enum ArrivalsState {
     case loading
-    case data([Arrival])
+    case data(ArrivalsInfo)
+    case error
 }
