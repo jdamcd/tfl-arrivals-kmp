@@ -12,14 +12,16 @@ struct ArrivalsBoard: View {
                 ProgressView()
                     .scaleEffect(0.5)
             case .error:
-                VStack {
-                    Spacer()
-                    ControlFooter(title: "", refresh: { viewModel.load() })
+                MainDisplay(footerText: "Refresh >>>", refresh: { viewModel.load() }) {
+                    DotMatrixRow(leadingText: "Error fetching arrivals", trailingText: "")
                 }
             case let .data(arrivalsInfo):
-                VStack {
-                    NextArrivalsList(arrivals: arrivalsInfo.arrivals)
-                    ControlFooter(title: arrivalsInfo.station, refresh: { viewModel.load() })
+                MainDisplay(footerText: arrivalsInfo.station, refresh: { viewModel.load() }) {
+                    VStack(spacing: 6) {
+                        ForEach(arrivalsInfo.arrivals, id: \.id) { arrival in
+                            DotMatrixRow(leadingText: arrival.destination, trailingText: arrival.time)
+                        }
+                    }
                 }
             }
         }
@@ -31,35 +33,30 @@ struct ArrivalsBoard: View {
     }
 }
 
-private struct NextArrivalsList: View {
-    var arrivals: [Arrival]
+private struct MainDisplay<Content: View>: View {
+    var footerText: String
+    var refresh: () -> Void
+    @ViewBuilder var content: Content
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 6) {
-                ForEach(arrivals, id: \.id) { arrival in
-                    HStack {
-                        DotMatrixText(text: arrival.destination)
-                        Spacer()
-                        DotMatrixText(text: arrival.time)
-                    }
-                }
-            }
+        VStack {
+            ZStack { content }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(8)
+                .background(Color.black)
+                .cornerRadius(4)
+            ControlFooter(text: footerText, refresh: refresh)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(8)
-        .background(Color.black)
-        .cornerRadius(4)
     }
 }
 
 private struct ControlFooter: View {
-    var title: String
+    var text: String
     var refresh: () -> Void
     
     var body: some View {
         HStack(spacing: 2) {
-            Text(title)
+            Text(text)
                 .font(.footnote)
                 .foregroundColor(Color.gray)
                 .padding(.leading, 2)
@@ -80,27 +77,33 @@ private struct ControlFooter: View {
     }
 }
 
+private struct DotMatrixRow: View {
+    var leadingText: String
+    var trailingText: String
+    
+    var body: some View {
+        HStack {
+            DotMatrixText(text: leadingText)
+            Spacer()
+            DotMatrixText(text: trailingText)
+        }
+    }
+}
+
 private struct DotMatrixText: View {
     var text: String
     
     var body: some View {
         Text(text)
             .font(.custom("LondonUnderground", size: 14))
-                .foregroundColor(.yellow)
+            .foregroundColor(.yellow)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
-        let arrivals = [
-            Arrival(id: 1, destination: "Clapham Junction", time: "2 min"),
-            Arrival(id: 2, destination: "New Cross", time: "7 min"),
-            Arrival(id: 3, destination: "Crystal Palace", time: "11 min")
-        ]
-        
         ArrivalsBoard()
-        ControlFooter(title: "Station Name", refresh: {})
-        NextArrivalsList(arrivals: arrivals)
+        ControlFooter(text: "Station Name", refresh: {})
     }
 }

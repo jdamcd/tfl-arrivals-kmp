@@ -35,7 +35,7 @@ internal class TflApi {
 
     suspend fun fetchArrivals(line: String, station: String): List<ApiArrival> {
         return client.get("$BASE_URL/Line/$line/Arrivals/$station") {
-            parameter("app_key", "xxxx")
+            parameter("app_key", APP_KEY)
         }.body()
     }
 
@@ -51,4 +51,5 @@ data class ApiArrival(
 )
 
 private const val DEBUG = false
+private const val APP_KEY = "YOUR_APP_KEY"
 private const val BASE_URL = "https://api.tfl.gov.uk/"
