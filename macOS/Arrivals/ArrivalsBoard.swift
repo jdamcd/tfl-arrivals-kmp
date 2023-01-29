@@ -35,15 +35,18 @@ private struct NextArrivalsList: View {
     var arrivals: [Arrival]
     
     var body: some View {
-        VStack(spacing: 6) {
-            ForEach(arrivals, id: \.id) { arrival in
-                HStack {
-                    DotMatrixText(text: arrival.destination)
-                    Spacer()
-                    DotMatrixText(text: arrival.time)
+        ZStack {
+            VStack(spacing: 6) {
+                ForEach(arrivals, id: \.id) { arrival in
+                    HStack {
+                        DotMatrixText(text: arrival.destination)
+                        Spacer()
+                        DotMatrixText(text: arrival.time)
+                    }
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(8)
         .background(Color.black)
         .cornerRadius(4)

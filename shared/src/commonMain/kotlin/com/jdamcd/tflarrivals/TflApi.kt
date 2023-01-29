@@ -26,8 +26,10 @@ internal class TflApi {
                 }
             )
         }
-        install(Logging) {
-            level = LogLevel.ALL
+        if (DEBUG) {
+            install(Logging) {
+                level = LogLevel.ALL
+            }
         }
     }
 
@@ -48,4 +50,5 @@ data class ApiArrival(
     val timeToStation: Int
 )
 
+private const val DEBUG = false
 private const val BASE_URL = "https://api.tfl.gov.uk/"
