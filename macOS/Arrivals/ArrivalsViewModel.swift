@@ -4,9 +4,9 @@ import TflArrivals
 @MainActor
 class ArrivalsViewModel: ObservableObject {
     @Published var state: ArrivalsState = .loading
-    
+
     private let fetcher = Arrivals()
-    
+
     func load() {
         Task {
             do {

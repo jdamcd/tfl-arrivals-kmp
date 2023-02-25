@@ -1,10 +1,10 @@
+import Foundation
 import SwiftUI
 import TflArrivals
-import Foundation
 
 struct ArrivalsBoard: View {
     @ObservedObject var viewModel = ArrivalsViewModel()
-        
+
     var body: some View {
         ZStack {
             switch viewModel.state {
@@ -37,7 +37,7 @@ private struct MainDisplay<Content: View>: View {
     var footerText: String
     var refresh: () -> Void
     @ViewBuilder var content: Content
-    
+
     var body: some View {
         VStack {
             ZStack { content }
@@ -53,7 +53,7 @@ private struct MainDisplay<Content: View>: View {
 private struct ControlFooter: View {
     var text: String
     var refresh: () -> Void
-    
+
     var body: some View {
         HStack(spacing: 2) {
             Text(text)
@@ -80,7 +80,7 @@ private struct ControlFooter: View {
 private struct DotMatrixRow: View {
     var leadingText: String
     var trailingText: String
-    
+
     var body: some View {
         HStack {
             DotMatrixText(text: leadingText)
@@ -92,7 +92,7 @@ private struct DotMatrixRow: View {
 
 private struct DotMatrixText: View {
     var text: String
-    
+
     var body: some View {
         Text(text)
             .font(.custom("LondonUnderground", size: 14))
@@ -101,7 +101,6 @@ private struct DotMatrixText: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    
     static var previews: some View {
         ArrivalsBoard()
         ControlFooter(text: "Station Name", refresh: {})
