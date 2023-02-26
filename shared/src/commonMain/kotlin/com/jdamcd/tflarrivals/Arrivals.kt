@@ -25,6 +25,7 @@ class Arrivals {
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
         val station = formatStation(apiArrivals.firstOrNull()?.stationName.orEmpty())
+        val platform = apiArrivals.firstOrNull()?.platformName.orEmpty()
         val arrivals = apiArrivals
             .sortedBy { it.timeToStation }
             .filter { it.platformName == PLATFORM }
@@ -37,7 +38,7 @@ class Arrivals {
                 )
             }
         return ArrivalsInfo(
-            station = station,
+            station = "$station: $platform",
             arrivals = arrivals
         )
     }
@@ -60,4 +61,4 @@ private fun formatTime(seconds: Int) =
     if (seconds < 60) "Due"
     else "${(seconds / 60f).roundToInt()} min"
 
-private fun formatStation(name: String) = name.replace("Rail Station", "")
+private fun formatStation(name: String) = name.replace("Rail Station", "").trim()
