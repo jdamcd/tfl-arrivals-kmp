@@ -11,12 +11,18 @@ struct ArrivalsApp: App {
     }
 }
 
+class PopoverState: ObservableObject {
+    @Published var isShown = false
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     var popover = NSPopover()
 
+    @ObservedObject var popoverState = PopoverState()
+
     func applicationDidFinishLaunching(_: Notification) {
-        let menuView = ArrivalsBoard()
+        let menuView = ArrivalsBoard(popoverState: popoverState)
 
         popover.behavior = .transient
         popover.animates = true
@@ -39,5 +45,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 popover.contentViewController?.view.window?.makeKey()
             }
         }
+        popoverState.isShown = popover.isShown
     }
 }

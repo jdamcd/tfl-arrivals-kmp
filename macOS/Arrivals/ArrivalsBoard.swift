@@ -4,19 +4,23 @@ import TflArrivals
 
 struct ArrivalsBoard: View {
     @ObservedObject var viewModel = ArrivalsViewModel()
+    @ObservedObject var popoverState: PopoverState
 
     var body: some View {
+        let refreshBehaviour = Refresh(isLoading: viewModel.loading) {
+            viewModel.load()
+        }
         ZStack {
             switch viewModel.state {
-            case .loading:
+            case .idle:
                 ProgressView()
                     .scaleEffect(0.5)
             case .error:
-                MainDisplay(footerText: "Refresh >>>", refresh: { viewModel.load() }) {
+                MainDisplay(footerText: "Refresh >>>", refreshBehaviour: refreshBehaviour) {
                     DotMatrixRow(leadingText: "Error fetching arrivals", trailingText: "")
                 }
             case let .data(arrivalsInfo):
-                MainDisplay(footerText: arrivalsInfo.station, refresh: { viewModel.load() }) {
+                MainDisplay(footerText: arrivalsInfo.station, refreshBehaviour: refreshBehaviour) {
                     VStack(spacing: 6) {
                         ForEach(arrivalsInfo.arrivals, id: \.id) { arrival in
                             DotMatrixRow(leadingText: arrival.destination, trailingText: arrival.time)
@@ -30,12 +34,17 @@ struct ArrivalsBoard: View {
         .onAppear {
             viewModel.load()
         }
+        .onReceive(popoverState.$isShown) { isShown in
+            if isShown {
+                viewModel.load()
+            }
+        }
     }
 }
 
 private struct MainDisplay<Content: View>: View {
     var footerText: String
-    var refresh: () -> Void
+    var refreshBehaviour: Refresh
     @ViewBuilder var content: Content
 
     var body: some View {
@@ -45,14 +54,14 @@ private struct MainDisplay<Content: View>: View {
                 .padding(8)
                 .background(Color.black)
                 .cornerRadius(4)
-            ControlFooter(text: footerText, refresh: refresh)
+            ControlFooter(text: footerText, refresh: refreshBehaviour)
         }
     }
 }
 
 private struct ControlFooter: View {
     var text: String
-    var refresh: () -> Void
+    var refresh: Refresh
 
     var body: some View {
         HStack(spacing: 2) {
@@ -62,11 +71,12 @@ private struct ControlFooter: View {
                 .padding(.leading, 2)
             Spacer()
             Button {
-                refresh()
+                refresh.onRefresh()
             } label: {
                 Image(systemName: "arrow.clockwise.circle.fill")
-                    .foregroundColor(Color.yellow)
+                    .foregroundColor(refresh.isLoading ? Color.gray : Color.yellow)
             }.buttonStyle(PlainButtonStyle())
+                .disabled(refresh.isLoading)
             Button {
                 NSApp.terminate(self)
             } label: {
@@ -100,9 +110,14 @@ private struct DotMatrixText: View {
     }
 }
 
+private struct Refresh {
+    var isLoading: Bool
+    var onRefresh: () -> Void
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ArrivalsBoard()
-        ControlFooter(text: "Station Name", refresh: {})
+        ArrivalsBoard(popoverState: PopoverState())
+        ControlFooter(text: "Station Name", refresh: Refresh(isLoading: false, onRefresh: {}))
     }
 }
