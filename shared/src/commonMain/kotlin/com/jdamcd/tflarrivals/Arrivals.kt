@@ -3,7 +3,6 @@ package com.jdamcd.tflarrivals
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
-private const val LINE = "london-overground"
 private const val STATION = "910GSHRDHST"
 private const val PLATFORM = "Platform 2"
 
@@ -14,7 +13,7 @@ class Arrivals {
     @Throws(NoDataException::class, CancellationException::class)
     suspend fun fetchArrivals(): ArrivalsInfo {
         try {
-            val model = formatArrivals(api.fetchArrivals(LINE, STATION))
+            val model = formatArrivals(api.fetchArrivals(STATION))
             if (model.arrivals.isNotEmpty()) {
                 return model
             } else throw NoDataException("No arrivals found")
