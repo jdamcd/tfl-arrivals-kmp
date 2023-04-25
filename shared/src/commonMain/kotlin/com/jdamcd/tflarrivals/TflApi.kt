@@ -39,6 +39,13 @@ internal class TflApi {
         }.body()
     }
 
+    suspend fun searchStations(query: String): List<ApiStopPoint> {
+        return client.get("$BASE_URL/StopPoint/Search") {
+            parameter("app_key", APP_KEY)
+            parameter("query", query)
+        }.body()
+    }
+
 }
 
 @Serializable
@@ -52,4 +59,10 @@ data class ApiArrival(
 
 private const val DEBUG = false
 private const val APP_KEY = "YOUR_APP_KEY"
+@Serializable
+data class ApiStopPoint(
+    val id: String,
+    val name: String
+)
+
 private const val BASE_URL = "https://api.tfl.gov.uk"

@@ -22,6 +22,12 @@ class Arrivals {
         }
     }
 
+    @Throws(CancellationException::class)
+    suspend fun searchStations(query: String): List<StopPoint> {
+        return api.searchStations(query)
+            .map { StopPoint(it.id, it.name) }
+    }
+
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
         val station = formatStation(apiArrivals.firstOrNull()?.stationName.orEmpty())
         val platform = apiArrivals.firstOrNull()?.platformName.orEmpty()
@@ -52,6 +58,11 @@ data class Arrival(
     val id: Int,
     val destination: String,
     val time: String
+)
+
+data class StopPoint(
+    val id: String,
+    val name: String
 )
 
 class NoDataException(message: String): Throwable(message = message)
