@@ -6,7 +6,10 @@ struct ArrivalsApp: App {
 
     var body: some Scene {
         Settings {
-            EmptyView()
+            SettingsView()
+                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { _ in
+                    NSApplication.accessoryMode()
+                }
         }
     }
 }
@@ -22,7 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @ObservedObject var popoverState = PopoverState()
 
     func applicationDidFinishLaunching(_: Notification) {
-        let menuView = ArrivalsBoard(popoverState: popoverState)
+        let menuView = ArrivalsView(popoverState: popoverState)
 
         popover.behavior = .transient
         popover.animates = true
@@ -46,5 +49,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         popoverState.isShown = popover.isShown
+    }
+}
+
+extension NSApplication {
+    static func foregroundMode() {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    static func accessoryMode() {
+        NSApp.hide(self)
+        NSApp.setActivationPolicy(.accessory)
     }
 }
