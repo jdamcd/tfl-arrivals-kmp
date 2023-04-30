@@ -24,7 +24,7 @@ class Arrivals {
 
     @Throws(CancellationException::class)
     suspend fun searchStations(query: String): List<StopPoint> {
-        return api.searchStations(query)
+        return api.searchStations(query).matches
             .map { StopPoint(it.id, it.name) }
     }
 

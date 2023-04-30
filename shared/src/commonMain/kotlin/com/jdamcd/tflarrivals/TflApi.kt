@@ -39,7 +39,7 @@ internal class TflApi {
         }.body()
     }
 
-    suspend fun searchStations(query: String): List<ApiStopPoint> {
+    suspend fun searchStations(query: String): ApiSearchResult {
         return client.get("$BASE_URL/StopPoint/Search") {
             parameter("app_key", APP_KEY)
             parameter("query", query)
@@ -57,8 +57,11 @@ data class ApiArrival(
     val timeToStation: Int
 )
 
-private const val DEBUG = false
-private const val APP_KEY = "YOUR_APP_KEY"
+@Serializable
+data class ApiSearchResult(
+    val matches: List<ApiStopPoint>
+)
+
 @Serializable
 data class ApiStopPoint(
     val id: String,
