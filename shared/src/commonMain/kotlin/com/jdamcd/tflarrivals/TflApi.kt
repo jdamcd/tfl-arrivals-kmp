@@ -16,7 +16,7 @@ internal class TflApi {
 
     private val client = HttpClient {
         install(HttpTimeout) {
-            requestTimeoutMillis = 10_000
+            requestTimeoutMillis = 10_000 // 10 seconds
         }
         install(ContentNegotiation) {
             json(

@@ -3,17 +3,15 @@ package com.jdamcd.tflarrivals
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
-private const val STATION = "910GSHRDHST"
-private const val PLATFORM = "Platform 2"
-
 class Arrivals {
 
     private val api = TflApi()
+    private val settings = Settings()
 
     @Throws(NoDataException::class, CancellationException::class)
     suspend fun fetchArrivals(): ArrivalsInfo {
         try {
-            val model = formatArrivals(api.fetchArrivals(STATION))
+            val model = formatArrivals(api.fetchArrivals(settings.selectedStop))
             if (model.arrivals.isNotEmpty()) {
                 return model
             } else throw NoDataException("No arrivals found")
@@ -33,7 +31,7 @@ class Arrivals {
         val platform = apiArrivals.firstOrNull()?.platformName.orEmpty()
         val arrivals = apiArrivals
             .sortedBy { it.timeToStation }
-            .filter { it.platformName == PLATFORM }
+            .filter { it.platformName == settings.platformFilter }
             .take(3)
             .map {
                 Arrival(
