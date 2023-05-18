@@ -16,7 +16,7 @@ struct ArrivalsView: View {
                 ProgressView()
                     .scaleEffect(0.5)
             case .error:
-                MainDisplay(footerText: "Refresh >>>", refreshBehaviour: refreshBehaviour) {
+                MainDisplay(footerText: "Refresh →", refreshBehaviour: refreshBehaviour) {
                     DotMatrixRow(leadingText: "Error fetching arrivals", trailingText: "")
                 }
             case let .data(arrivalsInfo):

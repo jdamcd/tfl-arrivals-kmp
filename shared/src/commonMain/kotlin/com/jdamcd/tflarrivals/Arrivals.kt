@@ -28,10 +28,12 @@ class Arrivals {
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
         val station = formatStation(apiArrivals.firstOrNull()?.stationName.orEmpty())
-        val platform = apiArrivals.firstOrNull()?.platformName.orEmpty()
         val arrivals = apiArrivals
             .sortedBy { it.timeToStation }
-            .filter { it.platformName == settings.platformFilter }
+            .filter {
+                if (settings.platformFilter.isEmpty()) true
+                else it.platformName.contains(settings.platformFilter, ignoreCase = true)
+            }
             .take(3)
             .map {
                 Arrival(
@@ -41,7 +43,7 @@ class Arrivals {
                 )
             }
         return ArrivalsInfo(
-            station = "$station: $platform",
+            station = "$station ${settings.platformFilter}",
             arrivals = arrivals
         )
     }
