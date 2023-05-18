@@ -43,6 +43,8 @@ internal class TflApi {
         return client.get("$BASE_URL/StopPoint/Search") {
             parameter("app_key", APP_KEY)
             parameter("query", query)
+            parameter("modes", "dlr,elizabeth-line,national-rail,overground,tube")
+            parameter("tflOperatedNationalRailStationsOnly", true)
         }.body()
     }
 }
