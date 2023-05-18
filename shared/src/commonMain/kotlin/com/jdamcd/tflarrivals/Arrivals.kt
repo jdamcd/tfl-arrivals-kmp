@@ -33,6 +33,9 @@ class Arrivals {
                 if (settings.platformFilter.isEmpty()) true
                 else it.platformName.contains(settings.platformFilter, ignoreCase = true)
             }
+            .filter { arrival ->
+                if (settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT) true
+                else arrival.direction.contains(settings.directionFilter) }
             .take(3)
             .map {
                 Arrival(
@@ -51,7 +54,7 @@ class Arrivals {
         val station = formatStation(settings.selectedStopName)
         return if (settings.platformFilter.isNotEmpty()) {
             "$station: ${settings.platformFilter}"
-        } else if (settings.directionFilter != "all") {
+        } else if (settings.directionFilter != SettingsConfig.DIRECTION_FILTER_DEFAULT) {
             "$station: ${formatDirection(settings.directionFilter)}"
         } else {
             station

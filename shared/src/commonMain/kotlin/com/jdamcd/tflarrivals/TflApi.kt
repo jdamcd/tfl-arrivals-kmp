@@ -45,7 +45,6 @@ internal class TflApi {
             parameter("query", query)
         }.body()
     }
-
 }
 
 @Serializable
@@ -53,6 +52,7 @@ data class ApiArrival(
     val id: Int,
     val stationName: String,
     val platformName: String,
+    val direction: String,
     val destinationName: String,
     val timeToStation: Int
 )
