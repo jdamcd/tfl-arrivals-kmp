@@ -5,10 +5,10 @@ import TflArrivals
 struct SettingsView: View {
     @Environment(\.controlActiveState) private var controlActiveState
     @ObservedObject var viewModel = SettingsViewModel()
-    
+
     @State private var searchQuery: String = ""
     @State private var selectedResult: StopPoint? = nil
-    
+
     @State private var platformFilter: String = ""
 
     var body: some View {
@@ -33,7 +33,7 @@ struct SettingsView: View {
             Text("Platform filter").font(.title2)
             TextField("", text: $platformFilter)
                 .autocorrectionDisabled()
-            
+
             HStack {
                 Spacer()
                 Button("Save") {

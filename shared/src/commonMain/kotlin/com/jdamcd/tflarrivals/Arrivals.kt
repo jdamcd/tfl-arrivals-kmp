@@ -71,4 +71,7 @@ private fun formatTime(seconds: Int) =
     if (seconds < 60) "Due"
     else "${(seconds / 60f).roundToInt()} min"
 
-private fun formatStation(name: String) = name.replace("Rail Station", "").trim()
+private fun formatStation(name: String) = name
+    .replace("Rail Station", "")
+    .replace("Underground Station", "")
+    .trim()

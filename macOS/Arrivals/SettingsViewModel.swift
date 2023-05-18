@@ -5,10 +5,10 @@ import TflArrivals
 class SettingsViewModel: ObservableObject {
     @Published var state: SettingsState = .idle
     @Published var searching = false
-    
+
     private let fetcher = Arrivals()
     private let settings = Settings()
-    
+
     func performSearch(_ query: String) {
         searching = true
         print("Searching: \(query)")
@@ -23,11 +23,11 @@ class SettingsViewModel: ObservableObject {
             searching = false
         }
     }
-    
+
     func getPlatformFilter() -> String {
-        return settings.platformFilter
+        settings.platformFilter
     }
-    
+
     func save(stopId: String, platformFilter: String) {
         settings.selectedStop = stopId
         settings.platformFilter = platformFilter
