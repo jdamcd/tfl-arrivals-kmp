@@ -24,13 +24,19 @@ class SettingsViewModel: ObservableObject {
         }
     }
 
-    func getPlatformFilter() -> String {
+    func initialPlatform() -> String {
         settings.platformFilter
     }
+    
+    func initialDirection() -> String {
+        settings.directionFilter
+    }
 
-    func save(stopId: String, platformFilter: String) {
-        settings.selectedStop = stopId
+    func save(stopPoint: StopPoint, platformFilter: String, directionFilter: String) {
+        settings.selectedStopName = stopPoint.name
+        settings.selectedStopId = stopPoint.id
         settings.platformFilter = platformFilter
+        settings.directionFilter = directionFilter
     }
 }
 

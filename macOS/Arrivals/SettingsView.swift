@@ -7,19 +7,24 @@ struct SettingsView: View {
     @ObservedObject var viewModel = SettingsViewModel()
 
     @State private var searchQuery: String = ""
-    @State private var selectedResult: StopPoint? = nil
+    @State private var selectedResult: StopPoint?
 
     @State private var platformFilter: String = ""
+    
+    let directions = ["all", "inbound", "outbound"]
+    @State private var directionFilter: String = "all"
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Station").font(.title2)
-            DebouncingTextField(label: "Search station", value: $searchQuery) { value in
-                if !value.isEmpty {
-                    viewModel.performSearch(value)
+            HStack {
+                Text("Station")
+                DebouncingTextField(label: "Search", value: $searchQuery) { value in
+                    if !value.isEmpty {
+                        viewModel.performSearch(value)
+                    }
                 }
+                .autocorrectionDisabled()
             }
-            .autocorrectionDisabled()
             switch viewModel.state {
             case let .data(results):
                 List(results, id: \.self, selection: $selectedResult) { result in
@@ -27,26 +32,38 @@ struct SettingsView: View {
                 }
                 .listStyle(PlainListStyle())
             case .idle:
-                EmptyView()
+                Text("Search to select station")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .background(.background)
             }
-            Spacer()
-            Text("Platform filter").font(.title2)
-            TextField("", text: $platformFilter)
-                .autocorrectionDisabled()
-
+            HStack {
+                Text("Platform")
+                TextField("No filter", text: $platformFilter)
+                    .autocorrectionDisabled()
+            }
+            Picker("Direction", selection: $directionFilter) {
+                ForEach(directions, id: \.self) {
+                    Text($0)
+                }
+            }.pickerStyle(.segmented)
             HStack {
                 Spacer()
                 Button("Save") {
-                    if let id = selectedResult?.id {
-                        viewModel.save(stopId: id, platformFilter: platformFilter)
+                    if let result = selectedResult {
+                        viewModel.save(
+                            stopPoint: result,
+                            platformFilter: platformFilter,
+                            directionFilter: directionFilter
+                        )
                         NSApplication.shared.keyWindow?.close()
                     }
-                }
+                }.disabled(selectedResult == nil)
             }
         }.padding()
-            .frame(width: 350, height: 350)
+            .frame(width: 350, height: 250)
             .onAppear {
-                platformFilter = viewModel.getPlatformFilter()
+                platformFilter = viewModel.initialPlatform()
+                directionFilter = viewModel.initialDirection()
             }
     }
 }

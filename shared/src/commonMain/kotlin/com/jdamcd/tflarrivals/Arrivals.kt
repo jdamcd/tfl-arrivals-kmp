@@ -11,7 +11,7 @@ class Arrivals {
     @Throws(NoDataException::class, CancellationException::class)
     suspend fun fetchArrivals(): ArrivalsInfo {
         try {
-            val model = formatArrivals(api.fetchArrivals(settings.selectedStop))
+            val model = formatArrivals(api.fetchArrivals(settings.selectedStopId))
             if (model.arrivals.isNotEmpty()) {
                 return model
             } else throw NoDataException("No arrivals found")
@@ -27,7 +27,6 @@ class Arrivals {
     }
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
-        val station = formatStation(apiArrivals.firstOrNull()?.stationName.orEmpty())
         val arrivals = apiArrivals
             .sortedBy { it.timeToStation }
             .filter {
@@ -43,9 +42,20 @@ class Arrivals {
                 )
             }
         return ArrivalsInfo(
-            station = "$station ${settings.platformFilter}",
+            station = stationInfo(),
             arrivals = arrivals
         )
+    }
+
+    private fun stationInfo(): String {
+        val station = formatStation(settings.selectedStopName)
+        return if (settings.platformFilter.isNotEmpty()) {
+            "$station: ${settings.platformFilter}"
+        } else if (settings.directionFilter != "all") {
+            "$station: ${formatDirection(settings.directionFilter)}"
+        } else {
+            station
+        }
     }
 }
 
@@ -75,3 +85,6 @@ private fun formatStation(name: String) = name
     .replace("Rail Station", "")
     .replace("Underground Station", "")
     .trim()
+
+private fun formatDirection(direction: String) =
+    direction.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
