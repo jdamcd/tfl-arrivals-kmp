@@ -12,4 +12,4 @@ See your local train station arrivals board in your status bar! It's a MacOS app
   * Geomni UK Map data © and database rights 2019
 
 ## Local builds
-You'll need to add a valid [Transport for London API](https://api-portal.tfl.gov.uk) app key in `TfLApi.kt`. It should just run from Xcode as long as you have a JDK at $JAVA_HOME.
+You'll need to add a valid [Transport for London API](https://api-portal.tfl.gov.uk) app key in `TfLApi.kt`. It should just run from Xcode as long as you have a JDK at `$JAVA_HOME`.
