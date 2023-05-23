@@ -10,24 +10,28 @@ class SettingsViewModel: ObservableObject {
     private let settings = Settings()
 
     func performSearch(_ query: String) {
+        state = .loading
         searching = true
         print("Searching: \(query)")
         Task {
             do {
                 let result = try await fetcher.searchStations(query: query)
                 print("Result: \(result)")
-                state = .data(result)
+                if result.isEmpty {
+                    state = .empty
+                } else {
+                    state = .data(result)
+                }
             } catch {
-                print("Load error")
+                state = .error
             }
-            searching = false
         }
     }
 
     func initialPlatform() -> String {
         settings.platformFilter
     }
-    
+
     func initialDirection() -> String {
         settings.directionFilter
     }
@@ -43,4 +47,7 @@ class SettingsViewModel: ObservableObject {
 enum SettingsState: Equatable {
     case idle
     case data([StopPoint])
+    case loading
+    case empty
+    case error
 }

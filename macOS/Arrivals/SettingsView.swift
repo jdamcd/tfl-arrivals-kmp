@@ -10,7 +10,7 @@ struct SettingsView: View {
     @State private var selectedResult: StopPoint?
 
     @State private var platformFilter: String = ""
-    
+
     let directions = ["all", "inbound", "outbound"]
     @State private var directionFilter: String = "all"
 
@@ -32,7 +32,14 @@ struct SettingsView: View {
                 }
                 .listStyle(PlainListStyle())
             case .idle:
-                Text("Search to select station")
+                ResultsArea(text: "Search to select station")
+            case .empty:
+                ResultsArea(text: "No results found")
+            case .error:
+                ResultsArea(text: "Search error")
+            case .loading:
+                ProgressView()
+                    .scaleEffect(0.5)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .background(.background)
             }
@@ -68,6 +75,16 @@ struct SettingsView: View {
     }
 }
 
+private struct ResultsArea: View {
+    var text: String
+
+    var body: some View {
+        Text(text)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(.background)
+    }
+}
+
 private struct DebouncingTextField: View {
     @State var publisher = PassthroughSubject<String, Never>()
     @State var label: String
@@ -82,7 +99,7 @@ private struct DebouncingTextField: View {
             }
             .onReceive(
                 publisher.debounce(
-                    for: .seconds(1),
+                    for: .seconds(0.7),
                     scheduler: DispatchQueue.main
                 )
             ) { value in
