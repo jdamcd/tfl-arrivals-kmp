@@ -21,9 +21,14 @@ class Arrivals {
     }
 
     @Throws(CancellationException::class)
-    suspend fun searchStations(query: String): List<StopPoint> {
+    suspend fun searchStops(query: String): List<StopResult> {
         return api.searchStations(query).matches
-            .map { StopPoint(it.id, it.name) }
+            .map { StopResult(it.id, it.name) }
+    }
+
+    suspend fun stopDetails(id: String): StopDetails {
+        val stopPoint = api.stopDetails(id)
+        return StopDetails(stopPoint.naptanId, stopPoint.commonName, stopPoint.children.map { StopResult(it.naptanId, it.commonName) })
     }
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
@@ -73,9 +78,17 @@ data class Arrival(
     val time: String
 )
 
-data class StopPoint(
+data class StopResult(
     val id: String,
     val name: String
+) {
+    fun isHub() = id.startsWith("HUB")
+}
+
+data class StopDetails(
+    val id: String,
+    val name: String,
+    val children: List<StopResult>
 )
 
 class NoDataException(message: String): Throwable(message = message)

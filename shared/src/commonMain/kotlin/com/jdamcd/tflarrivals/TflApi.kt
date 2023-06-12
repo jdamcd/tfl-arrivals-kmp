@@ -47,6 +47,12 @@ internal class TflApi {
             parameter("tflOperatedNationalRailStationsOnly", true)
         }.body()
     }
+
+    suspend fun stopDetails(id: String): ApiStopPoint {
+        return client.get("$BASE_URL/StopPoint/$id") {
+            parameter("app_key", APP_KEY)
+        }.body()
+    }
 }
 
 @Serializable
@@ -61,13 +67,20 @@ data class ApiArrival(
 
 @Serializable
 data class ApiSearchResult(
-    val matches: List<ApiStopPoint>
+    val matches: List<ApiMatchedStop>
+)
+
+@Serializable
+data class ApiMatchedStop(
+    val id: String,
+    val name: String
 )
 
 @Serializable
 data class ApiStopPoint(
-    val id: String,
-    val name: String
+    val commonName: String,
+    val naptanId: String,
+    val children: List<ApiStopPoint>
 )
 
 private const val BASE_URL = "https://api.tfl.gov.uk"

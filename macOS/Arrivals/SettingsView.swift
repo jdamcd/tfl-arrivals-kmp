@@ -7,7 +7,7 @@ struct SettingsView: View {
     @ObservedObject var viewModel = SettingsViewModel()
 
     @State private var searchQuery: String = ""
-    @State private var selectedResult: StopPoint?
+    @State private var selectedResult: StopResult?
 
     @State private var platformFilter: String = ""
 
@@ -29,6 +29,14 @@ struct SettingsView: View {
             case let .data(results):
                 List(results, id: \.self, selection: $selectedResult) { result in
                     Text(result.name)
+                }
+                .onChange(of: selectedResult) { result in
+                    if let result {
+                        if result.isHub() {
+                            viewModel.disambiguate(stop: result)
+                            selectedResult = nil
+                        }
+                    }
                 }
                 .listStyle(PlainListStyle())
             case .idle:
@@ -56,9 +64,9 @@ struct SettingsView: View {
             HStack {
                 Spacer()
                 Button("Save") {
-                    if let result = selectedResult {
+                    if let selectedResult {
                         viewModel.save(
-                            stopPoint: result,
+                            stopPoint: selectedResult,
                             platformFilter: platformFilter,
                             directionFilter: directionFilter
                         )
