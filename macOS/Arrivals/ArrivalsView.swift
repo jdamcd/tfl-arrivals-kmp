@@ -17,7 +17,7 @@ struct ArrivalsView: View {
                     .scaleEffect(0.5)
             case .error:
                 MainDisplay(footerText: "Refresh →", refreshBehaviour: refreshBehaviour) {
-                    DotMatrixRow(leadingText: "Error fetching arrivals", trailingText: "")
+                    DotMatrixRow(leadingText: "No arrivals found", trailingText: "")
                 }
             case let .data(arrivalsInfo):
                 MainDisplay(footerText: arrivalsInfo.station, refreshBehaviour: refreshBehaviour) {
