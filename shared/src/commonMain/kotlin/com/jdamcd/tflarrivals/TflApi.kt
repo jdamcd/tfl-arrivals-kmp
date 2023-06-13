@@ -80,6 +80,7 @@ data class ApiMatchedStop(
 data class ApiStopPoint(
     val commonName: String,
     val naptanId: String,
+    val stopType: String,
     val children: List<ApiStopPoint>
 )
 

@@ -48,7 +48,7 @@ class Arrivals {
             .take(3)
             .map {
                 Arrival(
-                    it.id,
+                    it.hashCode(), // DLR arrivals all have the same ID?!
                     formatStation(it.destinationName),
                     formatTime(it.timeToStation)
                 )
@@ -104,6 +104,7 @@ private fun formatTime(seconds: Int) =
 private fun formatStation(name: String) = name
     .replace("Rail Station", "")
     .replace("Underground Station", "")
+    .replace("DLR Station", "")
     .trim()
 
 private fun formatDirection(direction: String) =
