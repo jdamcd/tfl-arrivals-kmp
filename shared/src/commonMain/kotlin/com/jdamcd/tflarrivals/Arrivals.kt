@@ -28,7 +28,11 @@ class Arrivals {
 
     suspend fun stopDetails(id: String): StopDetails {
         val stopPoint = api.stopDetails(id)
-        return StopDetails(stopPoint.naptanId, stopPoint.commonName, stopPoint.children.map { StopResult(it.naptanId, it.commonName) })
+        return StopDetails(stopPoint.naptanId, stopPoint.commonName,
+            stopPoint.children
+                .filter { it.stopType == "NaptanMetroStation" || it.stopType == "NaptanRailStation" }
+                .map { StopResult(it.naptanId, it.commonName) }
+        )
     }
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
