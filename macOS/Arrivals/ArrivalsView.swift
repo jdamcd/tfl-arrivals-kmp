@@ -16,8 +16,8 @@ struct ArrivalsView: View {
                 ProgressView()
                     .scaleEffect(0.5)
             case .error:
-                MainDisplay(footerText: "Refresh →", refreshBehaviour: refreshBehaviour) {
-                    DotMatrixRow(leadingText: "No arrivals found", trailingText: "")
+                MainDisplay(footerText: nil, refreshBehaviour: refreshBehaviour) {
+                    DotMatrixRow(leadingText: "No arrivals found", trailingText: nil)
                 }
             case let .data(arrivalsInfo):
                 MainDisplay(footerText: arrivalsInfo.station, refreshBehaviour: refreshBehaviour) {
@@ -43,7 +43,7 @@ struct ArrivalsView: View {
 }
 
 private struct MainDisplay<Content: View>: View {
-    var footerText: String
+    var footerText: String?
     var refreshBehaviour: Refresh
     @ViewBuilder var content: Content
 
@@ -60,15 +60,17 @@ private struct MainDisplay<Content: View>: View {
 }
 
 private struct ControlFooter: View {
-    var text: String
+    var text: String?
     var refresh: Refresh
 
     var body: some View {
         HStack(spacing: 2) {
-            Text(text)
-                .font(.footnote)
-                .foregroundColor(Color.gray)
-                .padding(.leading, 2)
+            if let text {
+                Text(text)
+                    .font(.footnote)
+                    .foregroundColor(Color.gray)
+                    .padding(.leading, 2)
+            }
             Spacer()
             Button {
                 openSettings()
@@ -95,13 +97,15 @@ private struct ControlFooter: View {
 
 private struct DotMatrixRow: View {
     var leadingText: String
-    var trailingText: String
+    var trailingText: String?
 
     var body: some View {
         HStack {
             DotMatrixText(text: leadingText)
             Spacer()
-            DotMatrixText(text: trailingText)
+            if let trailingText {
+                DotMatrixText(text: trailingText)
+            }
         }
     }
 }

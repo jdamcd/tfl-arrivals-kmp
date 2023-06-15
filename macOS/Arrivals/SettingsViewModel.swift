@@ -25,7 +25,7 @@ class SettingsViewModel: ObservableObject {
             }
         }
     }
-    
+
     func disambiguate(stop: StopResult) {
         state = .loading
         print("Getting stop children: \(stop.id)")
