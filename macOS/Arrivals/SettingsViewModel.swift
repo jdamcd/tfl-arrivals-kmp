@@ -10,11 +10,9 @@ class SettingsViewModel: ObservableObject {
 
     func performSearch(_ query: String) {
         state = .loading
-        print("Searching: \(query)")
         Task {
             do {
                 let result = try await fetcher.searchStops(query: query)
-                print("Result: \(result)")
                 if result.isEmpty {
                     state = .empty
                 } else {
@@ -28,11 +26,9 @@ class SettingsViewModel: ObservableObject {
 
     func disambiguate(stop: StopResult) {
         state = .loading
-        print("Getting stop children: \(stop.id)")
         Task {
             do {
                 let result = try await fetcher.stopDetails(id: stop.id)
-                print("Result: \(result)")
                 if result.children.isEmpty {
                     state = .empty
                 } else {
@@ -62,8 +58,8 @@ class SettingsViewModel: ObservableObject {
 
 enum SettingsState: Equatable {
     case idle
-    case data([StopResult])
     case loading
+    case data([StopResult])
     case empty
     case error
 }

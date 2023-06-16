@@ -51,16 +51,16 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .background(.background)
             }
-            HStack {
-                Text("Platform")
-                TextField("No filter", text: $platformFilter)
-                    .autocorrectionDisabled()
-            }
             Picker("Direction", selection: $directionFilter) {
                 ForEach(directions, id: \.self) {
                     Text($0)
                 }
             }.pickerStyle(.segmented)
+            HStack {
+                Text("Platform")
+                TextField("No filter", text: $platformFilter)
+                    .autocorrectionDisabled()
+            }
             HStack {
                 Spacer()
                 Button("Save") {

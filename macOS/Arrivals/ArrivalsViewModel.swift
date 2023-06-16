@@ -11,14 +11,11 @@ class ArrivalsViewModel: ObservableObject {
     func load() {
         if !loading {
             loading = true
-            print("Loading")
             Task {
                 do {
                     let result = try await fetcher.fetchArrivals()
-                    print("Result: \(result)")
                     state = .data(result)
                 } catch {
-                    print("Load error")
                     state = .error
                 }
                 loading = false
