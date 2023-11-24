@@ -25,7 +25,7 @@ jobs:
 
   macOS:
     name: macOS app
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
 
     - uses: actions/checkout@v3
