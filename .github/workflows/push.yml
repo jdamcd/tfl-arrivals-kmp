@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  shared:
+    name: Shared
+    runs-on: ubuntu-22.04
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Setup JDK
+      uses: actions/setup-java@v3
+      with:
+       distribution: 'adopt'
+       java-version: '11'
+
+    - name: Build
+      run: ./gradlew assemble
+
+  macOS:
+    name: macOS app
+    runs-on: macos-12
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Setup JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+
+    - name: Test
+      run: |
+        xcodebuild test -project macOS/Arrivals.xcodeproj \
+          -scheme Arrivals \
+          -destination 'platform=macOS' \
+          -configuration Debug
+
