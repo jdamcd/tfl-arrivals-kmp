@@ -26,6 +26,7 @@ jobs:
   macOS:
     name: macOS app
     runs-on: macos-13
+    if: false # Add signing after secrets
     steps:
 
     - uses: actions/checkout@v3

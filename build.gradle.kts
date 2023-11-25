@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform").version("1.7.20").apply(false)
+    kotlin("multiplatform").version("1.9.20").apply(false)
 }
 
 buildscript {
@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.7.20")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:1.9.20")
     }
 }
 
