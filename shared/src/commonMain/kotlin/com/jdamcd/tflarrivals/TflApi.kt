@@ -35,13 +35,13 @@ internal class TflApi {
 
     suspend fun fetchArrivals(station: String): List<ApiArrival> {
         return client.get("$BASE_URL/StopPoint/$station/Arrivals") {
-            parameter("app_key", APP_KEY)
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
         }.body()
     }
 
     suspend fun searchStations(query: String): ApiSearchResult {
         return client.get("$BASE_URL/StopPoint/Search") {
-            parameter("app_key", APP_KEY)
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
             parameter("query", query)
             parameter("modes", "dlr,elizabeth-line,overground,tube,tram")
             parameter("tflOperatedNationalRailStationsOnly", true)
@@ -50,7 +50,7 @@ internal class TflApi {
 
     suspend fun stopDetails(id: String): ApiStopPoint {
         return client.get("$BASE_URL/StopPoint/$id") {
-            parameter("app_key", APP_KEY)
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
         }.body()
     }
 }

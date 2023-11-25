@@ -1,6 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     kotlin("multiplatform")
     id("kotlinx-serialization")
+    id("com.codingfeline.buildkonfig")
 }
 
 kotlin {
@@ -34,5 +39,23 @@ kotlin {
                 implementation("io.ktor:ktor-client-darwin:${ktorVersion}")
             }
         }
+    }
+}
+
+@Suppress("TooGenericExceptionCaught")
+configure<BuildKonfigExtension> {
+    packageName = "com.jdamcd.tflarrivals"
+
+    val props = Properties()
+    try {
+        props.load(file("secret.properties").inputStream())
+    } catch (_: Exception) {}
+
+    defaultConfigs {
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "TFL_APP_KEY",
+            props["tfl_app_key"]?.toString() ?: ""
+        )
     }
 }
