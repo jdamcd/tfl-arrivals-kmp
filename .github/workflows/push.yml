@@ -20,13 +20,16 @@ jobs:
        distribution: 'adopt'
        java-version: '11'
 
+    - name: Load secrets
+      run: echo "tfl_app_key=${{ secrets.TFL_APP_KEY }}" > shared/secret.properties
+
     - name: Build
       run: ./gradlew assemble
 
   macOS:
     name: macOS app
     runs-on: macos-13
-    if: false # Add signing after secrets
+    if: false # Add signing
     steps:
 
     - uses: actions/checkout@v3
@@ -37,10 +40,12 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
 
+    - name: Load secrets
+      run: echo "tfl_app_key=${{ secrets.TFL_APP_KEY }}" > shared/secret.properties
+
     - name: Test
       run: |
         xcodebuild test -project macOS/Arrivals.xcodeproj \
           -scheme Arrivals \
           -destination 'platform=macOS' \
           -configuration Debug
-
