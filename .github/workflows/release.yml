@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: macos-13
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Configure Xcode
+        uses: actions/setup-xcode@v2
+        with:
+          xcode-version: '14.2'
+
+      - name: Configure JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Load secrets
+        run: echo "tfl_app_key=${{ secrets.TFL_APP_KEY }}" > shared/secret.properties
+
+      - name: Build
+        run: |
+          xcodebuild -project macOS/Arrivals.xcodeproj \
+            -scheme Arrivals \
+            -destination 'platform=macOS' \
+            -configuration Release
+
+#     TODO
+#      - name: Sign
+#      - name: Upload Artifact

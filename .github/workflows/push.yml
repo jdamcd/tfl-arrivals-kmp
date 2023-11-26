@@ -1,4 +1,4 @@
-name: CI
+name: Push
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: Setup JDK
+    - name: Configure JDK
       uses: actions/setup-java@v3
       with:
        distribution: 'adopt'
@@ -29,12 +29,16 @@ jobs:
   macOS:
     name: macOS app
     runs-on: macos-13
-    if: false # Add signing
     steps:
 
     - uses: actions/checkout@v3
 
-    - name: Setup JDK
+    - name: Configure Xcode
+      uses: actions/setup-xcode@v2
+      with:
+        xcode-version: '14.2'
+
+    - name: Configure JDK
       uses: actions/setup-java@v3
       with:
         distribution: 'adopt'
@@ -45,7 +49,7 @@ jobs:
 
     - name: Test
       run: |
-        xcodebuild test -project macOS/Arrivals.xcodeproj \
+        xcodebuild -project macOS/Arrivals.xcodeproj \
           -scheme Arrivals \
           -destination 'platform=macOS' \
           -configuration Debug

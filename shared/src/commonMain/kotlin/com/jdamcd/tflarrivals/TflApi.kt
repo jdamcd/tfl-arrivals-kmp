@@ -85,3 +85,4 @@ data class ApiStopPoint(
 )
 
 private const val BASE_URL = "https://api.tfl.gov.uk"
+private const val DEBUG = false
