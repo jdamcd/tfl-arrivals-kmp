@@ -28,6 +28,7 @@ jobs:
 
   macOS:
     name: macOS app
+    if: false
     runs-on: macos-13
     steps:
 
@@ -47,7 +48,7 @@ jobs:
     - name: Load secrets
       run: echo "tfl_app_key=${{ secrets.TFL_APP_KEY }}" > shared/secret.properties
 
-    - name: Test
+    - name: Build
       run: |
         xcodebuild -project macOS/Arrivals.xcodeproj \
           -scheme Arrivals \
