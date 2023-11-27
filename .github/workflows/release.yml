@@ -31,9 +31,39 @@ jobs:
         run: |
           xcodebuild -project macOS/Arrivals.xcodeproj \
             -scheme Arrivals \
-            -destination 'platform=macOS' \
-            -configuration Release
+            -configuration Release build CONFIGURATION_BUILD_DIR=./target/
 
-#     TODO
-#      - name: Sign
-#      - name: Upload Artifact
+      - name: Sign
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}
+          MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
+          MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
+        run: |          
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+          
+          security create-keychain -p "$MACOS_CI_KEYCHAIN_PWD" build.keychain 
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$MACOS_CI_KEYCHAIN_PWD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
+          
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime macOS/target/Arrivals.app -v
+
+      - name: Notarize
+        env:
+          PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}
+          PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}
+          PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}
+        run: |
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
+
+          ditto -c -k --keepParent "macOS/target/Arrivals.app" "arrivals.zip"
+          xcrun notarytool submit "arrivals.zip" --keychain-profile "notarytool-profile" --wait
+
+          xcrun stapler staple "macOS/target/Arrivals.app"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Arrivals
+          path: macOS/target/Arrivals.app

@@ -28,7 +28,6 @@ jobs:
 
   macOS:
     name: macOS app
-    if: false
     runs-on: macos-13
     steps:
 
@@ -52,5 +51,4 @@ jobs:
       run: |
         xcodebuild -project macOS/Arrivals.xcodeproj \
           -scheme Arrivals \
-          -destination 'platform=macOS' \
-          -configuration Debug
+          -configuration Debug build CONFIGURATION_BUILD_DIR=./target/
