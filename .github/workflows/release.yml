@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-13
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Configure Xcode
         uses: maxim-lobanov/setup-xcode@v1
@@ -48,7 +48,7 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
           
-          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime macOS/target/Arrivals.app -v
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --deep --timestamp --options runtime macOS/target/Arrivals.app -v
 
       - name: Notarize
         env:
