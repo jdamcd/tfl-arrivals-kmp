@@ -9,11 +9,13 @@ plugins {
 }
 
 kotlin {
-    macosArm64("macOS") {
-        binaries {
-            framework {
-                baseName = "TflArrivals"
-            }
+
+    listOf(
+        macosArm64(),
+        macosX64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "TflArrivals"
         }
     }
 
@@ -34,7 +36,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val macOSMain by getting {
+        val macosArm64Main by getting
+        val macosX64Main by getting
+        val macOSMain by creating {
+            dependsOn(commonMain)
+            macosArm64Main.dependsOn(this)
+            macosX64Main.dependsOn(this)
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:${ktorVersion}")
             }

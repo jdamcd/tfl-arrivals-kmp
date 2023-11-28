@@ -7,10 +7,10 @@ on:
 
 jobs:
   build:
+    name: Build release
     runs-on: macos-13
 
     steps:
-
       - uses: actions/checkout@v2
 
       - name: Configure Xcode

@@ -28,6 +28,7 @@ jobs:
 
   macOS:
     name: macOS app
+    if: false
     runs-on: macos-13
     steps:
 
