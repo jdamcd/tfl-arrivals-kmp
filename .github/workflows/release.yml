@@ -62,8 +62,10 @@ jobs:
           xcrun notarytool submit "arrivals.zip" --keychain-profile "notarytool-profile" --wait
 
           xcrun stapler staple "macOS/target/Arrivals.app"
+          
+          ditto -c -k --keepParent "macOS/target/Arrivals.app" "ArrivalsMac.zip"
 
       - uses: actions/upload-artifact@v3
         with:
           name: Arrivals
-          path: macOS/target/Arrivals.app
+          path: macOS/target/ArrivalsMac.zip
