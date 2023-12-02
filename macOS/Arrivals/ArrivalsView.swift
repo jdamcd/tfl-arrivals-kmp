@@ -1,4 +1,5 @@
 import Foundation
+import SettingsAccess
 import SwiftUI
 import TflArrivals
 
@@ -72,26 +73,25 @@ private struct ControlFooter: View {
                     .padding(.leading, 2)
             }
             Spacer()
-            Button {
-                openSettings()
-            } label: {
+            SettingsLink {
                 Image(systemName: "gearshape.circle.fill")
                     .foregroundColor(Color.yellow)
-            }.buttonStyle(PlainButtonStyle())
+            } preAction: {
+                NSApplication.foregroundMode()
+            } postAction: {}
             Button {
                 refresh.onRefresh()
             } label: {
                 Image(systemName: "arrow.clockwise.circle.fill")
                     .foregroundColor(refresh.isLoading ? Color.gray : Color.yellow)
-            }.buttonStyle(PlainButtonStyle())
-                .disabled(refresh.isLoading)
+            }.disabled(refresh.isLoading)
             Button {
                 NSApp.terminate(self)
             } label: {
                 Image(systemName: "x.circle.fill")
                     .foregroundColor(Color.yellow)
-            }.buttonStyle(PlainButtonStyle())
-        }
+            }
+        }.buttonStyle(PlainButtonStyle())
     }
 }
 

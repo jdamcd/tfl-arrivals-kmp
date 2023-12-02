@@ -15,6 +15,7 @@
 		494573E929FD42DD00971BF4 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494573E829FD42DD00971BF4 /* SettingsViewModel.swift */; };
 		494945A829F7ABCD00D463D7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494945A729F7ABCD00D463D7 /* SettingsView.swift */; };
 		498B00EB298474E7001E83C4 /* ArrivalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B00EA298474E7001E83C4 /* ArrivalsViewModel.swift */; };
+		49D28FF72B1B76600015C9D7 /* SettingsAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 49D28FF62B1B76600015C9D7 /* SettingsAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49D28FF72B1B76600015C9D7 /* SettingsAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +137,9 @@
 			dependencies = (
 			);
 			name = Arrivals;
+			packageProductDependencies = (
+				49D28FF62B1B76600015C9D7 /* SettingsAccess */,
+			);
 			productName = Arrivals;
 			productReference = 49386256297F4BE700C61AE3 /* Arrivals.app */;
 			productType = "com.apple.product-type.application";
@@ -207,6 +212,9 @@
 				Base,
 			);
 			mainGroup = 4938624D297F4BE700C61AE3;
+			packageReferences = (
+				49D28FF52B1B76600015C9D7 /* XCRemoteSwiftPackageReference "SettingsAccess" */,
+			);
 			productRefGroup = 49386257297F4BE700C61AE3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -610,6 +618,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		49D28FF52B1B76600015C9D7 /* XCRemoteSwiftPackageReference "SettingsAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orchetect/SettingsAccess";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49D28FF62B1B76600015C9D7 /* SettingsAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49D28FF52B1B76600015C9D7 /* XCRemoteSwiftPackageReference "SettingsAccess" */;
+			productName = SettingsAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4938624E297F4BE700C61AE3 /* Project object */;
 }
