@@ -51,4 +51,4 @@ jobs:
       run: |
         xcodebuild -project macOS/Arrivals.xcodeproj \
           -scheme Arrivals \
-          -configuration Debug build CONFIGURATION_BUILD_DIR=./target/
+          -configuration Debug build
