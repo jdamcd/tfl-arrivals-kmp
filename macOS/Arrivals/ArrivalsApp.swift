@@ -59,7 +59,6 @@ extension NSApplication {
     }
 
     static func accessoryMode() {
-        NSApp.hide(self)
         NSApp.setActivationPolicy(.accessory)
     }
 }

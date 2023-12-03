@@ -125,18 +125,6 @@ private struct Refresh {
     var onRefresh: () -> Void
 }
 
-private func openSettings() {
-    NSApplication.foregroundMode()
-    if #available(macOS 13, *) {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-    } else {
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ArrivalsView(popoverState: PopoverState())
-        ControlFooter(text: "Station Name", refresh: Refresh(isLoading: false, onRefresh: {}))
-    }
+#Preview {
+    ArrivalsView(popoverState: PopoverState())
 }

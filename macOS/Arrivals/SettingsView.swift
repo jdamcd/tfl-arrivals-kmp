@@ -3,7 +3,6 @@ import SwiftUI
 import TflArrivals
 
 struct SettingsView: View {
-    @Environment(\.controlActiveState) private var controlActiveState
     @ObservedObject var viewModel = SettingsViewModel()
 
     @State private var searchQuery: String = ""
@@ -121,8 +120,6 @@ private struct DebouncingTextField: View {
     }
 }
 
-struct Settings_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
+#Preview {
+    SettingsView()
 }
