@@ -7,8 +7,11 @@ struct ArrivalsApp: App {
     var body: some Scene {
         Settings {
             SettingsView()
-                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { _ in
-                    NSApplication.accessoryMode()
+                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { newValue in
+                    // TODO: Not this
+                    if (!newValue.description.contains("TUINSWindow")) {
+                        NSApplication.accessoryMode()
+                    }
                 }
         }
     }
