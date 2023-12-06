@@ -48,7 +48,7 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
           
-          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --deep --timestamp --options runtime "${BUILD_DIR}/Arrivals.app" -v
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --deep --timestamp --options runtime "${BUILD_PRODUCTS_DIR}/Arrivals.app" -v
 
       - name: Notarize
         env:
@@ -58,12 +58,12 @@ jobs:
         run: |
           xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
 
-          ditto -c -k --keepParent "${BUILD_DIR}/Arrivals.app" "arrivals.zip"
+          ditto -c -k --keepParent "${BUILD_PRODUCTS_DIR}/Arrivals.app" "arrivals.zip"
           xcrun notarytool submit "arrivals.zip" --keychain-profile "notarytool-profile" --wait
 
-          xcrun stapler staple "${BUILD_DIR}/Arrivals.app"
+          xcrun stapler staple "${BUILD_PRODUCTS_DIR}/Arrivals.app"
           
-          ditto -c -k --keepParent "${BUILD_DIR}/Arrivals.app" "ArrivalsMac.zip"
+          ditto -c -k --keepParent "${BUILD_PRODUCTS_DIR}/Arrivals.app" "ArrivalsMac.zip"
 
       - uses: actions/upload-artifact@v3
         with:
