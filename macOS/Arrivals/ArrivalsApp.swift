@@ -3,18 +3,36 @@ import SwiftUI
 @main
 struct ArrivalsApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State private var settingsWindow: NSWindow?
 
     var body: some Scene {
         Settings {
             SettingsView()
-                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { newValue in
-                    // TODO: Not this
-                    if (!newValue.description.contains("TUINSWindow")) {
-                        NSApplication.accessoryMode()
+                .background(WindowAccessor(window: $settingsWindow))
+                .onReceive(NotificationCenter.default.publisher(for: NSWindow.willCloseNotification)) { notif in
+                    if let window = notif.object as? NSWindow {
+                        print("Window \(window.windowNumber) is closing. Settings is \(settingsWindow?.windowNumber ?? -1).")
+                        if window.windowNumber == settingsWindow?.windowNumber {
+                            NSApplication.accessoryMode()
+                        }
                     }
                 }
         }
     }
+}
+
+struct WindowAccessor: NSViewRepresentable {
+    @Binding var window: NSWindow?
+
+    func makeNSView(context _: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async {
+            self.window = view.window
+        }
+        return view
+    }
+
+    func updateNSView(_: NSView, context _: Context) {}
 }
 
 class PopoverState: ObservableObject {
