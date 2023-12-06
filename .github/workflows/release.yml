@@ -32,6 +32,7 @@ jobs:
           xcodebuild -project macOS/Arrivals.xcodeproj \
             -scheme Arrivals \
             -configuration Release build
+          ln -s $BUILD_PRODUCTS_DIR macOS/target
 
       - name: Sign
         env:
@@ -39,6 +40,7 @@ jobs:
           MACOS_CERTIFICATE_PWD: ${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}
           MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
           MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
+          ARTIFACT_PATH: "macOS/target/Arrivals.app"
         run: |          
           echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
           
@@ -48,22 +50,23 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
           
-          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --deep --timestamp --options runtime "${BUILD_PRODUCTS_DIR}/Arrivals.app" -v
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --deep --timestamp --options runtime "$ARTIFACT_PATH" -v
 
       - name: Notarize
         env:
           PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}
           PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}
           PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}
+          ARTIFACT_PATH: "macOS/target/Arrivals.app"
         run: |
           xcrun notarytool store-credentials "notarytool-profile" --apple-id "$PROD_MACOS_NOTARIZATION_APPLE_ID" --team-id "$PROD_MACOS_NOTARIZATION_TEAM_ID" --password "$PROD_MACOS_NOTARIZATION_PWD"
 
-          ditto -c -k --keepParent "${BUILD_PRODUCTS_DIR}/Arrivals.app" "arrivals.zip"
-          xcrun notarytool submit "arrivals.zip" --keychain-profile "notarytool-profile" --wait
-
-          xcrun stapler staple "${BUILD_PRODUCTS_DIR}/Arrivals.app"
+          ditto -c -k --keepParent "$ARTIFACT_PATH" "arrivals-upload.zip"
           
-          ditto -c -k --keepParent "${BUILD_PRODUCTS_DIR}/Arrivals.app" "ArrivalsMac.zip"
+          xcrun notarytool submit "arrivals-upload.zip" --keychain-profile "notarytool-profile" --wait
+          xcrun stapler staple "$ARTIFACT_PATH"
+          
+          ditto -c -k --keepParent "$ARTIFACT_PATH" "ArrivalsMac.zip"
 
       - uses: actions/upload-artifact@v3
         with:
