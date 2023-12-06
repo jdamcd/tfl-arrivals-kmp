@@ -32,7 +32,6 @@ jobs:
           xcodebuild -project macOS/Arrivals.xcodeproj \
             -scheme Arrivals \
             -configuration Release build
-          ditto $BUILD_PRODUCTS_DIR macOS/target
 
       - name: Sign
         env:
