@@ -25,7 +25,7 @@ struct SettingsView: View {
                 .autocorrectionDisabled()
                 Image(systemName: "questionmark.app")
                     .foregroundColor(Color.gray)
-                    .help("Tube, Overground, DLR, and Tram stations are supported. Arrival times are not available at the end of the line.")
+                    .help("London Overground, Tube, DLR, and Tram stations are supported. Arrival times are not available at the end of the line.")
             }
             switch viewModel.state {
             case let .data(results):

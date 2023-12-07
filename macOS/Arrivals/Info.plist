@@ -6,5 +6,7 @@
 	<array>
 		<string>LUR.ttf</string>
 	</array>
+	<key>ATSApplicationFontsPath</key>
+	<string>LUR.ttf</string>
 </dict>
 </plist>

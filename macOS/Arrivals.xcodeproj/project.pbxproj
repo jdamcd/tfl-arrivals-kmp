@@ -11,10 +11,10 @@
 		4938625C297F4BE700C61AE3 /* ArrivalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4938625B297F4BE700C61AE3 /* ArrivalsView.swift */; };
 		4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4938625D297F4BE900C61AE3 /* Assets.xcassets */; };
 		49386261297F4BE900C61AE3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49386260297F4BE900C61AE3 /* Preview Assets.xcassets */; };
-		49386288298348A100C61AE3 /* LUR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49386287298348A100C61AE3 /* LUR.ttf */; };
 		494573E929FD42DD00971BF4 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494573E829FD42DD00971BF4 /* SettingsViewModel.swift */; };
 		494945A829F7ABCD00D463D7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494945A729F7ABCD00D463D7 /* SettingsView.swift */; };
 		498B00EB298474E7001E83C4 /* ArrivalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B00EA298474E7001E83C4 /* ArrivalsViewModel.swift */; };
+		499D198E2B22721D0023FFD2 /* LUR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49386287298348A100C61AE3 /* LUR.ttf */; };
 		49D28FF72B1B76600015C9D7 /* SettingsAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 49D28FF62B1B76600015C9D7 /* SettingsAccess */; };
 /* End PBXBuildFile section */
 
@@ -231,8 +231,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				499D198E2B22721D0023FFD2 /* LUR.ttf in Resources */,
 				49386261297F4BE900C61AE3 /* Preview Assets.xcassets in Resources */,
-				49386288298348A100C61AE3 /* LUR.ttf in Resources */,
 				4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
