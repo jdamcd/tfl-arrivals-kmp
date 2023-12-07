@@ -1,6 +1,6 @@
-# TFL Arrivals
+# TfL Arrivals
 
-See your local train station arrivals board in your status bar! It's a MacOS app, but the API layer is built with Kotlin Multiplatform for the flexibility to add more UI targets later.
+See your local TfL train station arrivals board in your status bar! It's a MacOS app, but the API layer is built with Kotlin Multiplatform for the flexibility to add more UI targets later.
 
 ![Screenshot: arrivals app in the MacOS status bar](screenshot.png)
 
