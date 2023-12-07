@@ -52,7 +52,7 @@ private struct MainDisplay<Content: View>: View {
         VStack {
             ZStack { content }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(8)
+                .padding(10)
                 .background(Color.black)
                 .cornerRadius(4)
             ControlFooter(text: footerText, refresh: refreshBehaviour)
