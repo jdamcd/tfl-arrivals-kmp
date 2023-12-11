@@ -23,6 +23,9 @@ jobs:
     - name: Load secrets
       run: echo "tfl_app_key=${{ secrets.TFL_APP_KEY }}" > shared/secret.properties
 
+    - name: Check
+      run: ./gradlew spotlessCheck
+
     - name: Build
       run: ./gradlew assemble
 
