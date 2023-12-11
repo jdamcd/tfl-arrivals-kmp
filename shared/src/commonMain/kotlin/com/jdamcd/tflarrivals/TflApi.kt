@@ -13,25 +13,25 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 internal class TflApi {
-
-    private val client = HttpClient {
-        install(HttpTimeout) {
-            requestTimeoutMillis = 10_000 // 10 seconds
-        }
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    isLenient = true
-                    ignoreUnknownKeys = true
+    private val client =
+        HttpClient {
+            install(HttpTimeout) {
+                requestTimeoutMillis = 10_000 // 10 seconds
+            }
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            if (DEBUG) {
+                install(Logging) {
+                    level = LogLevel.ALL
                 }
-            )
-        }
-        if (DEBUG) {
-            install(Logging) {
-                level = LogLevel.ALL
             }
         }
-    }
 
     suspend fun fetchArrivals(station: String): List<ApiArrival> {
         return client.get("$BASE_URL/StopPoint/$station/Arrivals") {

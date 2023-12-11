@@ -4,7 +4,6 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 class Arrivals {
-
     private val api = TflApi()
     private val settings = Settings()
 
@@ -14,7 +13,9 @@ class Arrivals {
             val model = formatArrivals(api.fetchArrivals(settings.selectedStopId))
             if (model.arrivals.isNotEmpty()) {
                 return model
-            } else throw NoDataException("No arrivals found")
+            } else {
+                throw NoDataException("No arrivals found")
+            }
         } catch (e: Exception) {
             throw NoDataException(e.message.orEmpty())
         }
@@ -28,7 +29,9 @@ class Arrivals {
 
     suspend fun stopDetails(id: String): StopDetails {
         val stopPoint = api.stopDetails(id)
-        return StopDetails(stopPoint.naptanId, stopPoint.commonName,
+        return StopDetails(
+            stopPoint.naptanId,
+            stopPoint.commonName,
             stopPoint.children
                 .filter { it.stopType == "NaptanMetroStation" || it.stopType == "NaptanRailStation" }
                 .map { StopResult(it.naptanId, it.commonName) }
@@ -36,23 +39,32 @@ class Arrivals {
     }
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
-        val arrivals = apiArrivals
-            .sortedBy { it.timeToStation }
-            .filter {
-                if (settings.platformFilter.isEmpty()) true
-                else it.platformName.contains(settings.platformFilter, ignoreCase = true)
-            }
-            .filter { arrival ->
-                if (settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT) true
-                else arrival.direction.contains(settings.directionFilter) }
-            .take(3)
-            .map {
-                Arrival(
-                    it.hashCode(), // DLR arrivals all have the same ID?!
-                    formatStation(it.destinationName),
-                    formatTime(it.timeToStation)
-                )
-            }
+        val arrivals =
+            apiArrivals
+                .sortedBy { it.timeToStation }
+                .filter {
+                    if (settings.platformFilter.isEmpty()) {
+                        true
+                    } else {
+                        it.platformName.contains(settings.platformFilter, ignoreCase = true)
+                    }
+                }
+                .filter { arrival ->
+                    if (settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT) {
+                        true
+                    } else {
+                        arrival.direction.contains(settings.directionFilter)
+                    }
+                }
+                .take(3)
+                .map {
+                    Arrival(
+                        // DLR arrivals all have the same ID, so use hash
+                        it.hashCode(),
+                        formatStation(it.destinationName),
+                        formatTime(it.timeToStation)
+                    )
+                }
         return ArrivalsInfo(
             station = stationInfo(),
             arrivals = arrivals
@@ -95,17 +107,20 @@ data class StopDetails(
     val children: List<StopResult>
 )
 
-class NoDataException(message: String): Throwable(message = message)
+class NoDataException(message: String) : Throwable(message = message)
 
 private fun formatTime(seconds: Int) =
-    if (seconds < 60) "Due"
-    else "${(seconds / 60f).roundToInt()} min"
+    if (seconds < 60) {
+        "Due"
+    } else {
+        "${(seconds / 60f).roundToInt()} min"
+    }
 
-private fun formatStation(name: String) = name
-    .replace("Rail Station", "")
-    .replace("Underground Station", "")
-    .replace("DLR Station", "")
-    .trim()
+private fun formatStation(name: String) =
+    name
+        .replace("Rail Station", "")
+        .replace("Underground Station", "")
+        .replace("DLR Station", "")
+        .trim()
 
-private fun formatDirection(direction: String) =
-    direction.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+private fun formatDirection(direction: String) = direction.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
