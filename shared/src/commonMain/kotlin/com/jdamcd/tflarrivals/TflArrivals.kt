@@ -39,7 +39,7 @@ internal class TflArrivals(
     @Throws(CancellationException::class)
     override suspend fun searchStops(query: String): List<StopResult> {
         return api.searchStations(query).matches
-            .map { StopResult(it.id, it.name) }
+            .map { StopResult(it.id, it.name, it.id.startsWith("HUB")) }
     }
 
     @Throws(CancellationException::class)
@@ -50,7 +50,7 @@ internal class TflArrivals(
             stopPoint.commonName,
             stopPoint.children
                 .filter { it.stopType == "NaptanMetroStation" || it.stopType == "NaptanRailStation" }
-                .map { StopResult(it.naptanId, it.commonName) }
+                .map { StopResult(it.naptanId, it.commonName, it.naptanId.startsWith("HUB")) }
         )
     }
 
@@ -106,10 +106,9 @@ data class Arrival(
 
 data class StopResult(
     val id: String,
-    val name: String
-) {
-    fun isHub() = id.startsWith("HUB")
-}
+    val name: String,
+    val isHub: Boolean
+)
 
 data class StopDetails(
     val id: String,

@@ -34,7 +34,7 @@ struct SettingsView: View {
                 }
                 .onChange(of: selectedResult) { result in
                     if let result {
-                        if result.isHub() {
+                        if result.isHub {
                             viewModel.disambiguate(stop: result)
                             selectedResult = nil
                         }
