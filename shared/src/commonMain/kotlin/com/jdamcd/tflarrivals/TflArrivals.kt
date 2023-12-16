@@ -3,12 +3,27 @@ package com.jdamcd.tflarrivals
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
-class Arrivals {
-    private val api = TflApi()
-    private val settings = Settings()
+object ArrivalsBuilder {
+    fun tflArrivals(): Arrivals = TflArrivals(TflApi(), Settings())
+}
 
+interface Arrivals {
     @Throws(NoDataException::class, CancellationException::class)
-    suspend fun fetchArrivals(): ArrivalsInfo {
+    suspend fun latest(): ArrivalsInfo
+
+    @Throws(CancellationException::class)
+    suspend fun searchStops(query: String): List<StopResult>
+
+    @Throws(CancellationException::class)
+    suspend fun stopDetails(id: String): StopDetails
+}
+
+internal class TflArrivals(
+    private val api: TflApi,
+    private val settings: Settings
+) : Arrivals {
+    @Throws(NoDataException::class, CancellationException::class)
+    override suspend fun latest(): ArrivalsInfo {
         try {
             val model = formatArrivals(api.fetchArrivals(settings.selectedStopId))
             if (model.arrivals.isNotEmpty()) {
@@ -22,12 +37,13 @@ class Arrivals {
     }
 
     @Throws(CancellationException::class)
-    suspend fun searchStops(query: String): List<StopResult> {
+    override suspend fun searchStops(query: String): List<StopResult> {
         return api.searchStations(query).matches
             .map { StopResult(it.id, it.name) }
     }
 
-    suspend fun stopDetails(id: String): StopDetails {
+    @Throws(CancellationException::class)
+    override suspend fun stopDetails(id: String): StopDetails {
         val stopPoint = api.stopDetails(id)
         return StopDetails(
             stopPoint.naptanId,
@@ -43,18 +59,12 @@ class Arrivals {
             apiArrivals
                 .sortedBy { it.timeToStation }
                 .filter {
-                    if (settings.platformFilter.isEmpty()) {
-                        true
-                    } else {
+                    settings.platformFilter.isEmpty() ||
                         it.platformName.contains(settings.platformFilter, ignoreCase = true)
-                    }
                 }
                 .filter { arrival ->
-                    if (settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT) {
-                        true
-                    } else {
+                    settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT ||
                         arrival.direction.contains(settings.directionFilter)
-                    }
                 }
                 .take(3)
                 .map {
@@ -123,4 +133,7 @@ private fun formatStation(name: String) =
         .replace("DLR Station", "")
         .trim()
 
-private fun formatDirection(direction: String) = direction.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+private fun formatDirection(direction: String) =
+    direction.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase() else it.toString()
+    }

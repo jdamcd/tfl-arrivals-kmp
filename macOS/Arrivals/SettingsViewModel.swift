@@ -5,7 +5,7 @@ import TflArrivals
 class SettingsViewModel: ObservableObject {
     @Published var state: SettingsState = .idle
 
-    private let fetcher = Arrivals()
+    private let fetcher = ArrivalsBuilder().tflArrivals()
     private let settings = Settings()
 
     func performSearch(_ query: String) {

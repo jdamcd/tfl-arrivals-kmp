@@ -56,7 +56,7 @@ internal class TflApi {
 }
 
 @Serializable
-data class ApiArrival(
+internal data class ApiArrival(
     val id: Int,
     val stationName: String,
     val platformName: String,
@@ -66,18 +66,18 @@ data class ApiArrival(
 )
 
 @Serializable
-data class ApiSearchResult(
+internal data class ApiSearchResult(
     val matches: List<ApiMatchedStop>
 )
 
 @Serializable
-data class ApiMatchedStop(
+internal data class ApiMatchedStop(
     val id: String,
     val name: String
 )
 
 @Serializable
-data class ApiStopPoint(
+internal data class ApiStopPoint(
     val commonName: String,
     val naptanId: String,
     val stopType: String,

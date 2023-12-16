@@ -6,14 +6,14 @@ class ArrivalsViewModel: ObservableObject {
     @Published var state: ArrivalsState = .idle
     @Published var loading = false
 
-    private let fetcher = Arrivals()
+    private let fetcher = ArrivalsBuilder().tflArrivals()
 
     func load() {
         if !loading {
             loading = true
             Task {
                 do {
-                    let result = try await fetcher.fetchArrivals()
+                    let result = try await fetcher.latest()
                     state = .data(result)
                 } catch {
                     state = .error
