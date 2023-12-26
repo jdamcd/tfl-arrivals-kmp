@@ -14,9 +14,8 @@ struct SettingsView: View {
     @State private var directionFilter: String = "all"
 
     var body: some View {
-        VStack(alignment: .leading) {
+        Form {
             HStack {
-                Text("Station")
                 DebouncingTextField(label: "Search", value: $searchQuery) { value in
                     if !value.isEmpty {
                         viewModel.performSearch(value)
@@ -53,14 +52,13 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .background(.background)
             }
-            Picker("Direction", selection: $directionFilter) {
-                ForEach(directions, id: \.self) {
-                    Text($0)
-                }
-            }.pickerStyle(.segmented)
-            HStack {
-                Text("Platform")
-                TextField("No filter", text: $platformFilter)
+            Section {
+                Picker("Direction", selection: $directionFilter) {
+                    ForEach(directions, id: \.self) {
+                        Text($0)
+                    }
+                }.pickerStyle(.segmented)
+                TextField("Platform", text: $platformFilter)
                     .autocorrectionDisabled()
             }
             HStack {
@@ -76,12 +74,13 @@ struct SettingsView: View {
                     }
                 }.disabled(selectedResult == nil)
             }
-        }.padding()
-            .frame(width: 350, height: 250)
-            .onAppear {
-                platformFilter = viewModel.initialPlatform()
-                directionFilter = viewModel.initialDirection()
-            }
+        }
+        .padding()
+        .frame(width: 350, height: 250)
+        .onAppear {
+            platformFilter = viewModel.initialPlatform()
+            directionFilter = viewModel.initialDirection()
+        }
     }
 }
 

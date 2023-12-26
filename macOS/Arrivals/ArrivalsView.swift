@@ -30,7 +30,8 @@ struct ArrivalsView: View {
                 }
             }
         }
-        .padding(8)
+        .padding(.horizontal, 8)
+        .padding(.top, 8)
         .frame(width: 350, height: 110)
         .onAppear {
             viewModel.load()
@@ -49,10 +50,10 @@ private struct MainDisplay<Content: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ZStack { content }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(10)
+                .padding(8)
                 .background(Color.black)
                 .cornerRadius(4)
             ControlFooter(text: footerText, refresh: refreshBehaviour)
@@ -91,7 +92,10 @@ private struct ControlFooter: View {
                 Image(systemName: "x.circle.fill")
                     .foregroundColor(Color.yellow)
             }
-        }.buttonStyle(PlainButtonStyle())
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.bottom, 2)
+        .frame(height: 28)
     }
 }
 
