@@ -1,14 +1,15 @@
 {
+  "originHash" : "d46323afa3e9435601487a61c9dfaba752136fc906f07d1ea16c4e3d9181ade0",
   "pins" : [
     {
       "identity" : "settingsaccess",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/orchetect/SettingsAccess",
       "state" : {
-        "revision" : "0fd73c8b5892e88acb13adb7f36a4ba9293a0061",
-        "version" : "1.4.0"
+        "revision" : "f0b57b4c4c0de66b9f4d6c41d39f1d6ede0c9891",
+        "version" : "2.0.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
