@@ -37,10 +37,11 @@ internal class TflArrivals(
     }
 
     @Throws(CancellationException::class)
-    override suspend fun searchStops(query: String): List<StopResult> {
-        return api.searchStations(query).matches
+    override suspend fun searchStops(query: String): List<StopResult> =
+        api
+            .searchStations(query)
+            .matches
             .map { StopResult(it.id, it.name, it.id.startsWith("HUB")) }
-    }
 
     @Throws(CancellationException::class)
     override suspend fun stopDetails(id: String): StopDetails {
@@ -61,12 +62,10 @@ internal class TflArrivals(
                 .filter {
                     settings.platformFilter.isEmpty() ||
                         it.platformName.contains(settings.platformFilter, ignoreCase = true)
-                }
-                .filter { arrival ->
+                }.filter { arrival ->
                     settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT ||
                         arrival.direction.contains(settings.directionFilter)
-                }
-                .take(3)
+                }.take(3)
                 .map {
                     Arrival(
                         // DLR arrivals all have the same ID, so use hash
@@ -116,7 +115,9 @@ data class StopDetails(
     val children: List<StopResult>
 )
 
-class NoDataException(message: String) : Throwable(message = message)
+class NoDataException(
+    message: String
+) : Throwable(message = message)
 
 private fun formatTime(seconds: Int) =
     if (seconds < 60) {
