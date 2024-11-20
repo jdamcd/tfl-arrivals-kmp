@@ -11,3 +11,4 @@ local.properties
 xcuserdata
 secret.properties
 /macOS/target
+/.kotlin

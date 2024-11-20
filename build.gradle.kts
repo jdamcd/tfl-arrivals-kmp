@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform").version("1.9.21").apply(false)
-    id("com.diffplug.spotless") version "6.23.3"
+    kotlin("multiplatform").version("2.0.21").apply(false)
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 buildscript {
@@ -8,9 +8,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.9.21")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.21")
-        classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.0")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.0.21")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+        classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
     }
 }
 
@@ -25,7 +25,7 @@ allprojects {
     spotless {
         kotlin {
             target("**/*.kt")
-            ktlint("1.0.1")
+            ktlint("1.4.1")
         }
     }
 }
