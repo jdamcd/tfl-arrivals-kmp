@@ -1,26 +1,17 @@
-package com.jdamcd.tflarrivals
+package com.jdamcd.tflarrivals.tfl
 
+import com.jdamcd.tflarrivals.Arrival
+import com.jdamcd.tflarrivals.Arrivals
+import com.jdamcd.tflarrivals.ArrivalsInfo
+import com.jdamcd.tflarrivals.NoDataException
+import com.jdamcd.tflarrivals.StopDetails
+import com.jdamcd.tflarrivals.StopResult
+import com.jdamcd.tflarrivals.formatTime
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.math.roundToInt
-
-object ArrivalsBuilder {
-    fun tflArrivals(): Arrivals = TflArrivals(TflApi(), Settings())
-}
-
-interface Arrivals {
-    @Throws(NoDataException::class, CancellationException::class)
-    suspend fun latest(): ArrivalsInfo
-
-    @Throws(CancellationException::class)
-    suspend fun searchStops(query: String): List<StopResult>
-
-    @Throws(CancellationException::class)
-    suspend fun stopDetails(id: String): StopDetails
-}
 
 internal class TflArrivals(
     private val api: TflApi,
-    private val settings: Settings
+    private val settings: TflSettings
 ) : Arrivals {
     @Throws(NoDataException::class, CancellationException::class)
     override suspend fun latest(): ArrivalsInfo {
@@ -91,40 +82,6 @@ internal class TflArrivals(
         }
     }
 }
-
-data class ArrivalsInfo(
-    val station: String,
-    val arrivals: List<Arrival>
-)
-
-data class Arrival(
-    val id: Int,
-    val destination: String,
-    val time: String
-)
-
-data class StopResult(
-    val id: String,
-    val name: String,
-    val isHub: Boolean
-)
-
-data class StopDetails(
-    val id: String,
-    val name: String,
-    val children: List<StopResult>
-)
-
-class NoDataException(
-    message: String
-) : Throwable(message = message)
-
-private fun formatTime(seconds: Int) =
-    if (seconds < 60) {
-        "Due"
-    } else {
-        "${(seconds / 60f).roundToInt()} min"
-    }
 
 private fun formatStation(name: String) =
     name

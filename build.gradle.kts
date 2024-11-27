@@ -11,6 +11,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-serialization:2.0.21")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
         classpath("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
+        classpath("com.squareup.wire:wire-gradle-plugin:5.1.0")
     }
 }
 

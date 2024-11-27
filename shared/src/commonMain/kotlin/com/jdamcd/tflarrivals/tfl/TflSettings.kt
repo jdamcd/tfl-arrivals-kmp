@@ -1,6 +1,6 @@
-package com.jdamcd.tflarrivals
+package com.jdamcd.tflarrivals.tfl
 
-expect class Settings() {
+expect class TflSettings() {
     var selectedStopName: String
     var selectedStopId: String
     var platformFilter: String
