@@ -3,14 +3,13 @@ import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
 import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
-    kotlin("multiplatform")
-    id("kotlinx-serialization")
-    id("com.codingfeline.buildkonfig")
-    id("com.squareup.wire")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.wire)
 }
 
 kotlin {
-
     listOf(
         macosArm64(),
         macosX64()
@@ -21,16 +20,11 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "3.0.1"
-
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:${ktorVersion}")
-            implementation("io.ktor:ktor-client-content-negotiation:${ktorVersion}")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:${ktorVersion}")
-            implementation("io.ktor:ktor-client-logging:${ktorVersion}")
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-            implementation("com.squareup.wire:wire-runtime:5.1.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+            implementation(libs.bundles.ktor.common)
+            implementation(libs.kotlin.datetime)
+            implementation(libs.kotlin.coroutines)
+            implementation(libs.wire.runtime)
         }
 
         commonTest.dependencies {
@@ -38,7 +32,7 @@ kotlin {
         }
 
         macosMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:${ktorVersion}")
+            implementation(libs.ktor.client.macos)
         }
     }
 }
