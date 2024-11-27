@@ -28,11 +28,10 @@ internal class TflArrivals(
     }
 
     @Throws(CancellationException::class)
-    override suspend fun searchStops(query: String): List<StopResult> =
-        api
-            .searchStations(query)
-            .matches
-            .map { StopResult(it.id, it.name, it.id.startsWith("HUB")) }
+    override suspend fun searchStops(query: String): List<StopResult> = api
+        .searchStations(query)
+        .matches
+        .map { StopResult(it.id, it.name, it.id.startsWith("HUB")) }
 
     @Throws(CancellationException::class)
     override suspend fun stopDetails(id: String): StopDetails {
@@ -83,14 +82,12 @@ internal class TflArrivals(
     }
 }
 
-private fun formatStation(name: String) =
-    name
-        .replace("Rail Station", "")
-        .replace("Underground Station", "")
-        .replace("DLR Station", "")
-        .trim()
+private fun formatStation(name: String) = name
+    .replace("Rail Station", "")
+    .replace("Underground Station", "")
+    .replace("DLR Station", "")
+    .trim()
 
-private fun formatDirection(direction: String) =
-    direction.replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase() else it.toString()
-    }
+private fun formatDirection(direction: String) = direction.replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase() else it.toString()
+}

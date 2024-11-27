@@ -34,26 +34,23 @@ internal class TflApi {
             }
         }
 
-    suspend fun fetchArrivals(station: String): List<ApiArrival> =
-        client
-            .get("$BASE_URL/StopPoint/$station/Arrivals") {
-                parameter("app_key", BuildKonfig.TFL_APP_KEY)
-            }.body()
+    suspend fun fetchArrivals(station: String): List<ApiArrival> = client
+        .get("$BASE_URL/StopPoint/$station/Arrivals") {
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
+        }.body()
 
-    suspend fun searchStations(query: String): ApiSearchResult =
-        client
-            .get("$BASE_URL/StopPoint/Search") {
-                parameter("app_key", BuildKonfig.TFL_APP_KEY)
-                parameter("query", query)
-                parameter("modes", "dlr,elizabeth-line,overground,tube,tram")
-                parameter("tflOperatedNationalRailStationsOnly", true)
-            }.body()
+    suspend fun searchStations(query: String): ApiSearchResult = client
+        .get("$BASE_URL/StopPoint/Search") {
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
+            parameter("query", query)
+            parameter("modes", "dlr,elizabeth-line,overground,tube,tram")
+            parameter("tflOperatedNationalRailStationsOnly", true)
+        }.body()
 
-    suspend fun stopDetails(id: String): ApiStopPoint =
-        client
-            .get("$BASE_URL/StopPoint/$id") {
-                parameter("app_key", BuildKonfig.TFL_APP_KEY)
-            }.body()
+    suspend fun stopDetails(id: String): ApiStopPoint = client
+        .get("$BASE_URL/StopPoint/$id") {
+            parameter("app_key", BuildKonfig.TFL_APP_KEY)
+        }.body()
 }
 
 @Serializable

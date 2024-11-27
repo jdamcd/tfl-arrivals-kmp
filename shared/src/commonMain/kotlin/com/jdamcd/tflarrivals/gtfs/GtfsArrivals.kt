@@ -47,25 +47,24 @@ internal class GtfsArrivals(
     private fun getNextArrivalsForStop(
         stopId: String,
         feedItems: List<FeedEntity>
-    ): List<Arrival> =
-        feedItems
-            .asSequence()
-            .mapNotNull { it.trip_update }
-            .flatMap { tripUpdate ->
-                tripUpdate.stop_time_update
-                    .filter { it.stop_id == stopId }
-                    .map { stopTimeUpdate ->
-                        val destination = "${tripUpdate.trip.route_id} - ${tripUpdate.stop_time_update.last().stop_id}"
-                        val secondsToStation =
-                            stopTimeUpdate.arrival?.time?.let { arrivalTime ->
-                                (arrivalTime - Clock.System.now().epochSeconds).toInt()
-                            } ?: 0
-                        Arrival(
-                            stopTimeUpdate.hashCode(),
-                            destination,
-                            formatTime(secondsToStation)
-                        )
-                    }
-            }.take(3)
-            .toList()
+    ): List<Arrival> = feedItems
+        .asSequence()
+        .mapNotNull { it.trip_update }
+        .flatMap { tripUpdate ->
+            tripUpdate.stop_time_update
+                .filter { it.stop_id == stopId }
+                .map { stopTimeUpdate ->
+                    val destination = "${tripUpdate.trip.route_id} - ${tripUpdate.stop_time_update.last().stop_id}"
+                    val secondsToStation =
+                        stopTimeUpdate.arrival?.time?.let { arrivalTime ->
+                            (arrivalTime - Clock.System.now().epochSeconds).toInt()
+                        } ?: 0
+                    Arrival(
+                        stopTimeUpdate.hashCode(),
+                        destination,
+                        formatTime(secondsToStation)
+                    )
+                }
+        }.take(3)
+        .toList()
 }
