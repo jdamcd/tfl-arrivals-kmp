@@ -38,33 +38,39 @@ internal class GtfsArrivals(
     override suspend fun stopDetails(id: String): StopDetails = StopDetails("", "", emptyList())
 
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {
-        // G28S = Nassau Ave (Southbound)
-        val station = "G28S"
-        val arrivals = getNextArrivalsForStop(station, feedMessage.entity)
-        return ArrivalsInfo(station, arrivals)
+        val stop = "A42N"
+        val arrivals = getNextArrivalsForStop(stop, feedMessage.entity)
+        return ArrivalsInfo(MtaStops.stopIdToName(stop), arrivals)
     }
 
     private fun getNextArrivalsForStop(
         stopId: String,
         feedItems: List<FeedEntity>
     ): List<Arrival> = feedItems
-        .asSequence()
         .mapNotNull { it.trip_update }
         .flatMap { tripUpdate ->
             tripUpdate.stop_time_update
                 .filter { it.stop_id == stopId }
                 .map { stopTimeUpdate ->
-                    val destination = "${tripUpdate.trip.route_id} - ${tripUpdate.stop_time_update.last().stop_id}"
-                    val secondsToStation =
-                        stopTimeUpdate.arrival?.time?.let { arrivalTime ->
-                            (arrivalTime - Clock.System.now().epochSeconds).toInt()
-                        } ?: 0
+                    val lastStop = MtaStops.stopIdToName(tripUpdate.stop_time_update.last().stop_id)
+                    val seconds = secondsToStop(stopTimeUpdate.arrival?.time)
                     Arrival(
                         stopTimeUpdate.hashCode(),
-                        destination,
-                        formatTime(secondsToStation)
+                        "${tripUpdate.trip.route_id} - $lastStop",
+                        formatTime(seconds),
+                        seconds
                     )
                 }
-        }.take(3)
-        .toList()
+        }
+        .sortedBy { it.secondsToStop }
+        .take(3)
+
+    private fun secondsToStop(time: Long?): Int {
+        if (time == null) {
+            return Int.MAX_VALUE
+        } else {
+            val now = Clock.System.now().epochSeconds
+            return (time - now).toInt()
+        }
+    }
 }

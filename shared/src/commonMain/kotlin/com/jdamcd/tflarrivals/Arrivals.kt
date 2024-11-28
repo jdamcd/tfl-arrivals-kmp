@@ -33,7 +33,8 @@ data class ArrivalsInfo(
 data class Arrival(
     val id: Int,
     val destination: String,
-    val time: String
+    val time: String,
+    val secondsToStop: Int
 )
 
 data class StopResult(

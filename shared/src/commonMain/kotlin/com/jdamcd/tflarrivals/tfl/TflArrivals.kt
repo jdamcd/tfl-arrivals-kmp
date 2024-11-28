@@ -61,7 +61,8 @@ internal class TflArrivals(
                         // DLR arrivals all have the same ID, so use hash
                         it.hashCode(),
                         formatStation(it.destinationName),
-                        formatTime(it.timeToStation)
+                        formatTime(it.timeToStation),
+                        it.timeToStation
                     )
                 }
         return ArrivalsInfo(

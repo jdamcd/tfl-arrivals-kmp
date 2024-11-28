@@ -70,7 +70,7 @@ private struct ControlFooter: View {
             if let text {
                 Text(text)
                     .font(.footnote)
-                    .foregroundColor(Color.gray)
+                    .foregroundColor(Color.yellow)
                     .padding(.leading, 2)
             }
             Spacer()
