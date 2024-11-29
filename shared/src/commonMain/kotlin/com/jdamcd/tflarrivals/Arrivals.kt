@@ -10,14 +10,16 @@ import kotlin.math.roundToInt
 
 object TransitSystem {
     fun tfl(): Arrivals = TflArrivals(TflApi(), TflSettings())
-
+    fun tflSearch(): StopSearch = TflArrivals(TflApi(), TflSettings())
     fun mta(): Arrivals = GtfsArrivals(GtfsApi())
 }
 
 interface Arrivals {
     @Throws(NoDataException::class, CancellationException::class)
     suspend fun latest(): ArrivalsInfo
+}
 
+interface StopSearch {
     @Throws(CancellationException::class)
     suspend fun searchStops(query: String): List<StopResult>
 

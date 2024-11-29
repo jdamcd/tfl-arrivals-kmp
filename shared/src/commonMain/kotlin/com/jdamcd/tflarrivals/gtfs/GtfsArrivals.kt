@@ -6,8 +6,6 @@ import com.jdamcd.tflarrivals.Arrival
 import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
-import com.jdamcd.tflarrivals.StopDetails
-import com.jdamcd.tflarrivals.StopResult
 import com.jdamcd.tflarrivals.formatTime
 import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
@@ -28,14 +26,6 @@ internal class GtfsArrivals(
             throw NoDataException(e.message.orEmpty())
         }
     }
-
-    // TODO: Settings for GTFS feeds
-    @Throws(CancellationException::class)
-    override suspend fun searchStops(query: String): List<StopResult> = emptyList()
-
-    // TODO: Settings for GTFS feeds
-    @Throws(CancellationException::class)
-    override suspend fun stopDetails(id: String): StopDetails = StopDetails("", "", emptyList())
 
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {
         val stop = "A42N"

@@ -6,13 +6,15 @@ import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
 import com.jdamcd.tflarrivals.StopDetails
 import com.jdamcd.tflarrivals.StopResult
+import com.jdamcd.tflarrivals.StopSearch
 import com.jdamcd.tflarrivals.formatTime
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class TflArrivals(
     private val api: TflApi,
     private val settings: TflSettings
-) : Arrivals {
+) : Arrivals,
+    StopSearch {
     @Throws(NoDataException::class, CancellationException::class)
     override suspend fun latest(): ArrivalsInfo {
         try {
