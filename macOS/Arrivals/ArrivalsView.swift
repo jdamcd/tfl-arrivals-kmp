@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import SettingsAccess
 import SwiftUI
@@ -6,6 +7,7 @@ import TflArrivals
 struct ArrivalsView: View {
     @ObservedObject var viewModel = ArrivalsViewModel()
     @ObservedObject var popoverState: PopoverState
+    @State private var timer: AnyCancellable?
 
     var body: some View {
         let refreshBehaviour = Refresh(isLoading: viewModel.loading) {
@@ -40,8 +42,24 @@ struct ArrivalsView: View {
         .onReceive(popoverState.$isShown) { isShown in
             if isShown {
                 viewModel.load()
+                startTimer()
+            } else {
+                stopTimer()
             }
         }
+    }
+
+    private func startTimer() {
+        timer = Timer.publish(every: 60, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+                viewModel.load()
+            }
+    }
+
+    private func stopTimer() {
+        timer?.cancel()
+        timer = nil
     }
 }
 

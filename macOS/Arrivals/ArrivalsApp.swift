@@ -40,8 +40,9 @@ class PopoverState: ObservableObject {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var statusItem: NSStatusItem?
-    var popover = NSPopover()
+    private var statusItem: NSStatusItem?
+    private let popover = NSPopover()
+    private let popoverDelegate = PopoverDelegate()
 
     @ObservedObject var popoverState = PopoverState()
 
@@ -52,6 +53,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.animates = true
         popover.contentViewController = NSViewController()
         popover.contentViewController?.view = NSHostingView(rootView: menuView)
+
+        popover.delegate = popoverDelegate
+        popoverDelegate.onShow = {
+            self.popoverState.isShown = true
+        }
+        popoverDelegate.onClose = {
+            self.popoverState.isShown = false
+        }
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let menuButton = statusItem?.button {
@@ -69,7 +78,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 popover.contentViewController?.view.window?.makeKey()
             }
         }
-        popoverState.isShown = popover.isShown
+    }
+}
+
+class PopoverDelegate: NSObject, NSPopoverDelegate {
+    var onShow: (() -> Void)?
+
+    func popoverDidShow(_: Notification) {
+        onShow?()
+    }
+
+    var onClose: (() -> Void)?
+
+    func popoverDidClose(_: Notification) {
+        onClose?()
     }
 }
 
