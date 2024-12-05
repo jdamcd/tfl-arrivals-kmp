@@ -18,13 +18,14 @@ struct ArrivalsView: View {
                     .scaleEffect(0.5)
             case .error:
                 MainDisplay(footerText: nil, refreshBehaviour: refreshBehaviour) {
-                    DotMatrixRow(leadingText: "No arrivals found", trailingText: nil)
+                    DotMatrixRow(leading: "No arrivals found", trailing: nil)
                 }
             case let .data(arrivalsInfo):
                 MainDisplay(footerText: arrivalsInfo.station, refreshBehaviour: refreshBehaviour) {
                     VStack(spacing: 6) {
                         ForEach(arrivalsInfo.arrivals, id: \.id) { arrival in
-                            DotMatrixRow(leadingText: arrival.destination, trailingText: arrival.time)
+                            DotMatrixRow(leading: arrival.destination, trailing: arrival.time,
+                                         animateTrailing: arrival.secondsToStop < 60)
                         }
                     }
                 }
@@ -100,15 +101,17 @@ private struct ControlFooter: View {
 }
 
 private struct DotMatrixRow: View {
-    var leadingText: String
-    var trailingText: String?
+    var leading: String
+    var trailing: String?
+    var animateTrailing: Bool = false
 
     var body: some View {
         HStack {
-            DotMatrixText(text: leadingText)
+            DotMatrixText(text: leading)
             Spacer()
-            if let trailingText {
-                DotMatrixText(text: trailingText)
+            if let trailing {
+                DotMatrixText(text: trailing)
+                    .blinking(enabled: animateTrailing)
             }
         }
     }

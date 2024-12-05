@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		490DFB872D0124D300DED8B2 /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490DFB862D0124D300DED8B2 /* UIExtensions.swift */; };
 		4938625A297F4BE700C61AE3 /* ArrivalsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49386259297F4BE700C61AE3 /* ArrivalsApp.swift */; };
 		4938625C297F4BE700C61AE3 /* ArrivalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4938625B297F4BE700C61AE3 /* ArrivalsView.swift */; };
 		4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4938625D297F4BE900C61AE3 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		490DFB862D0124D300DED8B2 /* UIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		49386256297F4BE700C61AE3 /* Arrivals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Arrivals.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49386259297F4BE700C61AE3 /* ArrivalsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsApp.swift; sourceTree = "<group>"; };
 		4938625B297F4BE700C61AE3 /* ArrivalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsView.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				493862862983404100C61AE3 /* Info.plist */,
 				49386259297F4BE700C61AE3 /* ArrivalsApp.swift */,
 				4938625B297F4BE700C61AE3 /* ArrivalsView.swift */,
+				490DFB862D0124D300DED8B2 /* UIExtensions.swift */,
 				498B00EA298474E7001E83C4 /* ArrivalsViewModel.swift */,
 				494945A729F7ABCD00D463D7 /* SettingsView.swift */,
 				494573E829FD42DD00971BF4 /* SettingsViewModel.swift */,
@@ -288,6 +291,7 @@
 				4938625C297F4BE700C61AE3 /* ArrivalsView.swift in Sources */,
 				498B00EB298474E7001E83C4 /* ArrivalsViewModel.swift in Sources */,
 				494945A829F7ABCD00D463D7 /* SettingsView.swift in Sources */,
+				490DFB872D0124D300DED8B2 /* UIExtensions.swift in Sources */,
 				4938625A297F4BE700C61AE3 /* ArrivalsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
