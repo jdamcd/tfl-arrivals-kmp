@@ -9,8 +9,11 @@ struct ArrivalsView: View {
     @ObservedObject var popoverState: PopoverState
     @State private var timer: AnyCancellable?
 
+    let onOpenSettings: () -> Void
+    let onQuit: () -> Void
+
     var body: some View {
-        let refreshBehaviour = Refresh(isLoading: viewModel.loading) {
+        let refresh = RefreshBehaviour(isLoading: viewModel.loading) {
             viewModel.load()
         }
         ZStack {
@@ -19,18 +22,28 @@ struct ArrivalsView: View {
                 ProgressView()
                     .scaleEffect(0.5)
             case .error:
-                MainDisplay(footerText: nil, refreshBehaviour: refreshBehaviour) {
+                MainDisplay(content: {
                     DotMatrixRow(leading: "No arrivals found", trailing: nil)
-                }
+                }, footer: {
+                    ControlFooter(text: nil,
+                                  refresh: refresh,
+                                  onOpenSettings: onOpenSettings,
+                                  onQuit: onQuit)
+                })
             case let .data(arrivalsInfo):
-                MainDisplay(footerText: arrivalsInfo.station, refreshBehaviour: refreshBehaviour) {
+                MainDisplay(content: {
                     VStack(spacing: 6) {
                         ForEach(arrivalsInfo.arrivals, id: \.id) { arrival in
                             DotMatrixRow(leading: arrival.destination, trailing: arrival.time,
                                          animateTrailing: arrival.secondsToStop < 60)
                         }
                     }
-                }
+                }, footer: {
+                    ControlFooter(text: arrivalsInfo.station,
+                                  refresh: refresh,
+                                  onOpenSettings: onOpenSettings,
+                                  onQuit: onQuit)
+                })
             }
         }
         .padding(.horizontal, 8)
@@ -63,10 +76,9 @@ struct ArrivalsView: View {
     }
 }
 
-private struct MainDisplay<Content: View>: View {
-    var footerText: String?
-    var refreshBehaviour: Refresh
+private struct MainDisplay<Content: View, Footer: View>: View {
     @ViewBuilder var content: Content
+    @ViewBuilder var footer: Footer
 
     var body: some View {
         VStack(spacing: 0) {
@@ -75,14 +87,16 @@ private struct MainDisplay<Content: View>: View {
                 .padding(8)
                 .background(Color.black)
                 .cornerRadius(4)
-            ControlFooter(text: footerText, refresh: refreshBehaviour)
+            footer
         }
     }
 }
 
 private struct ControlFooter: View {
     var text: String?
-    var refresh: Refresh
+    var refresh: RefreshBehaviour
+    let onOpenSettings: () -> Void
+    let onQuit: () -> Void
 
     var body: some View {
         HStack(spacing: 2) {
@@ -97,7 +111,7 @@ private struct ControlFooter: View {
                 Image(systemName: "gearshape.circle.fill")
                     .foregroundColor(Color.yellow)
             } preAction: {
-                NSApplication.foregroundMode()
+                onOpenSettings()
             } postAction: {}
             Button {
                 refresh.onRefresh()
@@ -106,7 +120,7 @@ private struct ControlFooter: View {
                     .foregroundColor(refresh.isLoading ? Color.gray : Color.yellow)
             }.disabled(refresh.isLoading)
             Button {
-                NSApp.terminate(self)
+                onQuit()
             } label: {
                 Image(systemName: "x.circle.fill")
                     .foregroundColor(Color.yellow)
@@ -145,11 +159,13 @@ private struct DotMatrixText: View {
     }
 }
 
-private struct Refresh {
+private struct RefreshBehaviour {
     var isLoading: Bool
     var onRefresh: () -> Void
 }
 
 #Preview {
-    ArrivalsView(popoverState: PopoverState())
+    ArrivalsView(popoverState: PopoverState(),
+                 onOpenSettings: {},
+                 onQuit: {})
 }

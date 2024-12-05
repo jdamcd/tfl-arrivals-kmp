@@ -47,7 +47,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @ObservedObject var popoverState = PopoverState()
 
     func applicationDidFinishLaunching(_: Notification) {
-        let menuView = ArrivalsView(popoverState: popoverState)
+        let menuView = ArrivalsView(
+            popoverState: popoverState,
+            onOpenSettings: { NSApplication.foregroundMode() },
+            onQuit: { NSApplication.quit() }
+        )
 
         popover.behavior = .transient
         popover.animates = true
@@ -103,5 +107,9 @@ extension NSApplication {
 
     static func accessoryMode() {
         NSApp.setActivationPolicy(.accessory)
+    }
+    
+    static func quit() {
+        NSApp.terminate(self)
     }
 }
