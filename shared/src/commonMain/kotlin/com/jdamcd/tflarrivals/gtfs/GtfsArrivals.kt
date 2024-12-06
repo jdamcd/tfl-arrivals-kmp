@@ -23,7 +23,7 @@ internal class GtfsArrivals(
                 throw NoDataException("No arrivals found")
             }
         } catch (e: Exception) {
-            throw NoDataException(e.message.orEmpty())
+            throw NoDataException("No connection")
         }
     }
 

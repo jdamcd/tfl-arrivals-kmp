@@ -16,7 +16,8 @@ class ArrivalsViewModel: ObservableObject {
                     let result = try await fetcher.latest()
                     state = .data(result)
                 } catch {
-                    state = .error
+                    let message = (error as NSError).localizedDescription
+                    state = .error(message)
                 }
                 loading = false
             }
@@ -27,5 +28,5 @@ class ArrivalsViewModel: ObservableObject {
 enum ArrivalsState: Equatable {
     case idle
     case data(ArrivalsInfo)
-    case error
+    case error(String)
 }

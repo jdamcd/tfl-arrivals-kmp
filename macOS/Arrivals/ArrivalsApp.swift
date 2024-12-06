@@ -108,7 +108,7 @@ extension NSApplication {
     static func accessoryMode() {
         NSApp.setActivationPolicy(.accessory)
     }
-    
+
     static func quit() {
         NSApp.terminate(self)
     }

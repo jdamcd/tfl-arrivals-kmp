@@ -21,9 +21,9 @@ struct ArrivalsView: View {
             case .idle:
                 ProgressView()
                     .scaleEffect(0.5)
-            case .error:
+            case let .error(message):
                 MainDisplay(content: {
-                    DotMatrixRow(leading: "No arrivals found", trailing: nil)
+                    DotMatrixRow(leading: message, trailing: nil)
                 }, footer: {
                     ControlFooter(text: nil,
                                   refresh: refresh,
