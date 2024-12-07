@@ -9,8 +9,9 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 object TransitSystem {
-    fun tfl(): Arrivals = TflArrivals(TflApi(), TflSettings())
-    fun tflSearch(): StopSearch = TflArrivals(TflApi(), TflSettings())
+    private val tflArrivals = TflArrivals(TflApi(), TflSettings())
+    fun tfl(): Arrivals = tflArrivals
+    fun tflSearch(): TflSearch = tflArrivals
     fun mta(): Arrivals = GtfsArrivals(GtfsApi())
 }
 
@@ -19,7 +20,7 @@ interface Arrivals {
     suspend fun latest(): ArrivalsInfo
 }
 
-interface StopSearch {
+interface TflSearch {
     @Throws(CancellationException::class)
     suspend fun searchStops(query: String): List<StopResult>
 

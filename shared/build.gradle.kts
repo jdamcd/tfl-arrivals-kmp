@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.kotlin.datetime)
             implementation(libs.kotlin.coroutines)
             implementation(libs.wire.runtime)
+            implementation(libs.okio)
         }
 
         commonTest.dependencies {

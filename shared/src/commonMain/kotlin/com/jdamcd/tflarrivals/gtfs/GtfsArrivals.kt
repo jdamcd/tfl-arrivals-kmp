@@ -7,12 +7,29 @@ import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
 import com.jdamcd.tflarrivals.formatTime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class GtfsArrivals(
     private val api: GtfsApi
 ) : Arrivals {
+
+    var stops = GtfsStops("")
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            stops = downloadStops()
+        }
+    }
+
+    private suspend fun downloadStops(): GtfsStops {
+        val stopsCsv = api.downloadStops("http://web.mta.info/developers/data/nyct/subway/google_transit.zip")
+        return GtfsStops(stopsCsv)
+    }
+
     @Throws(NoDataException::class, CancellationException::class)
     override suspend fun latest(): ArrivalsInfo {
         try {
@@ -30,7 +47,7 @@ internal class GtfsArrivals(
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {
         val stop = "A42N"
         val arrivals = getNextArrivalsForStop(stop, feedMessage.entity)
-        return ArrivalsInfo(MtaStops.stopIdToName(stop), arrivals)
+        return ArrivalsInfo(stops.stopIdToName(stop), arrivals)
     }
 
     private fun getNextArrivalsForStop(
@@ -42,7 +59,7 @@ internal class GtfsArrivals(
             tripUpdate.stop_time_update
                 .filter { it.stop_id == stopId }
                 .map { stopTimeUpdate ->
-                    val lastStop = MtaStops.stopIdToName(tripUpdate.stop_time_update.last().stop_id)
+                    val lastStop = stops.stopIdToName(tripUpdate.stop_time_update.last().stop_id)
                     val seconds = secondsToStop(stopTimeUpdate.arrival?.time)
                     Arrival(
                         stopTimeUpdate.hashCode(),

@@ -8,5 +8,10 @@
 	</array>
 	<key>ATSApplicationFontsPath</key>
 	<string>LUR.ttf</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
