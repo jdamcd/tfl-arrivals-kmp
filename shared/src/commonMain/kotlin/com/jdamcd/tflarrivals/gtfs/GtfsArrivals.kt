@@ -7,10 +7,6 @@ import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
 import com.jdamcd.tflarrivals.formatTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -18,20 +14,11 @@ internal class GtfsArrivals(
     private val api: GtfsApi
 ) : Arrivals {
 
-    var stops = GtfsStops("")
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            stops = downloadStops()
-        }
-    }
-
-    private suspend fun downloadStops(): GtfsStops {
-        val stopsCsv = api.downloadStops("http://web.mta.info/developers/data/nyct/subway/google_transit.zip")
-        return GtfsStops(stopsCsv)
-    }
+    private lateinit var stops: GtfsStops
 
     @Throws(NoDataException::class, CancellationException::class)
     override suspend fun latest(): ArrivalsInfo {
+        updateStops()
         try {
             val model = formatArrivals(api.fetchFeedMessage())
             if (model.arrivals.isNotEmpty()) {
@@ -41,6 +28,17 @@ internal class GtfsArrivals(
             }
         } catch (e: Exception) {
             throw NoDataException("No connection")
+        }
+    }
+
+    private suspend fun updateStops() {
+        if (!::stops.isInitialized) {
+            try {
+                val stopsCsv = api.downloadStops("http://web.mta.info/developers/data/nyct/subway/google_transit.zip")
+                stops = GtfsStops(stopsCsv)
+            } catch (e: Exception) {
+                throw NoDataException("Stop data unavailable")
+            }
         }
     }
 
