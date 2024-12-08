@@ -52,6 +52,7 @@ internal class GtfsArrivals(
         stopId: String,
         feedItems: List<FeedEntity>
     ): List<Arrival> = feedItems
+        .asSequence()
         .mapNotNull { it.trip_update }
         .flatMap { tripUpdate ->
             tripUpdate.stop_time_update
@@ -67,8 +68,10 @@ internal class GtfsArrivals(
                     )
                 }
         }
+        .filter { it.secondsToStop >= 0 }
         .sortedBy { it.secondsToStop }
         .take(3)
+        .toList()
 
     private fun secondsToStop(time: Long?): Int {
         if (time == null) {
