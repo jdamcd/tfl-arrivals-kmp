@@ -2,11 +2,15 @@ import Foundation
 import TflArrivals
 
 @MainActor
-class SettingsViewModel: ObservableObject {
+class TflSettingsViewModel: ObservableObject {
     @Published var state: SettingsState = .idle
 
     private let fetcher = TransitSystem().tflSearch()
-    private let settings = TflSettings()
+    private let settings = Settings()
+
+    func reset() {
+        state = .idle
+    }
 
     func performSearch(_ query: String) {
         state = .loading
@@ -41,18 +45,19 @@ class SettingsViewModel: ObservableObject {
     }
 
     func initialPlatform() -> String {
-        settings.platformFilter
+        settings.tflPlatform
     }
 
     func initialDirection() -> String {
-        settings.directionFilter
+        settings.tflDirection
     }
 
     func save(stopPoint: StopResult, platformFilter: String, directionFilter: String) {
-        settings.selectedStopName = stopPoint.name
-        settings.selectedStopId = stopPoint.id
-        settings.platformFilter = platformFilter
-        settings.directionFilter = directionFilter
+        settings.tflStopName = stopPoint.name
+        settings.tflStopId = stopPoint.id
+        settings.tflPlatform = platformFilter
+        settings.tflDirection = directionFilter
+        settings.mode = SettingsConfig().MODE_TFL
     }
 }
 

@@ -1,4 +1,45 @@
+import Combine
 import SwiftUI
+
+struct DebouncingTextField: View {
+    @StateObject private var viewModel: DebouncingTextFieldModel
+    @Binding private var value: String
+    var label: String
+
+    init(label: String, value: Binding<String>, debounceInterval: TimeInterval = 0.75, valueChanged: @escaping (String) -> Void) {
+        self.label = label
+        _value = value
+        _viewModel = StateObject(wrappedValue: DebouncingTextFieldModel(debounceInterval: debounceInterval, valueChanged: valueChanged))
+    }
+
+    var body: some View {
+        TextField(label, text: $viewModel.text)
+            .onAppear {
+                viewModel.text = value
+            }
+            .onChange(of: viewModel.text) { newValue in
+                value = newValue
+            }
+    }
+}
+
+private class DebouncingTextFieldModel: ObservableObject {
+    @Published var text: String = "" {
+        didSet {
+            guard text != oldValue else { return }
+            publisher.send(text)
+        }
+    }
+
+    let publisher = PassthroughSubject<String, Never>()
+    private var cancellable: AnyCancellable?
+
+    init(debounceInterval: TimeInterval, valueChanged: @escaping (String) -> Void) {
+        cancellable = publisher
+            .debounce(for: .seconds(debounceInterval), scheduler: DispatchQueue.main)
+            .sink(receiveValue: valueChanged)
+    }
+}
 
 struct BlinkViewModifier: ViewModifier {
     let duration: Double
@@ -25,5 +66,17 @@ extension View {
                 self
             }
         }
+    }
+}
+
+extension String {
+    func trim() -> String {
+        trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+extension String {
+    var isNotEmpty: Bool {
+        !trim().isEmpty
     }
 }

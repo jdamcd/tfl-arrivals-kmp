@@ -6,7 +6,7 @@ class ArrivalsViewModel: ObservableObject {
     @Published var state: ArrivalsState = .idle
     @Published var loading = false
 
-    private let fetcher = TransitSystem().tfl()
+    private let fetcher = TransitSystem().arrivals()
 
     func load() {
         if !loading {

@@ -4,15 +4,22 @@ import com.jdamcd.tflarrivals.gtfs.GtfsApi
 import com.jdamcd.tflarrivals.gtfs.GtfsArrivals
 import com.jdamcd.tflarrivals.tfl.TflApi
 import com.jdamcd.tflarrivals.tfl.TflArrivals
-import com.jdamcd.tflarrivals.tfl.TflSettings
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
 object TransitSystem {
-    private val tflArrivals = TflArrivals(TflApi(), TflSettings())
-    fun tfl(): Arrivals = tflArrivals
+    private val settings = Settings()
+    private val tflArrivals = TflArrivals(TflApi(), settings)
+    private val mtaArrivals = GtfsArrivals(GtfsApi(), settings)
+
     fun tflSearch(): TflSearch = tflArrivals
-    fun mta(): Arrivals = GtfsArrivals(GtfsApi())
+    fun arrivals() = object : Arrivals {
+        override suspend fun latest(): ArrivalsInfo = if (Settings().mode == SettingsConfig.MODE_TFL) {
+            tflArrivals.latest()
+        } else {
+            mtaArrivals.latest()
+        }
+    }
 }
 
 interface Arrivals {

@@ -6,12 +6,14 @@ import com.jdamcd.tflarrivals.Arrival
 import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
+import com.jdamcd.tflarrivals.Settings
 import com.jdamcd.tflarrivals.formatTime
 import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class GtfsArrivals(
-    private val api: GtfsApi
+    private val api: GtfsApi,
+    private val settings: Settings
 ) : Arrivals {
 
     private lateinit var stops: GtfsStops
@@ -20,7 +22,7 @@ internal class GtfsArrivals(
     override suspend fun latest(): ArrivalsInfo {
         updateStops()
         try {
-            val model = formatArrivals(api.fetchFeedMessage())
+            val model = formatArrivals(api.fetchFeedMessage(settings.gtfsRealtime))
             if (model.arrivals.isNotEmpty()) {
                 return model
             } else {
@@ -34,7 +36,7 @@ internal class GtfsArrivals(
     private suspend fun updateStops() {
         if (!::stops.isInitialized) {
             try {
-                val stopsCsv = api.downloadStops("http://web.mta.info/developers/data/nyct/subway/google_transit.zip")
+                val stopsCsv = api.downloadStops(settings.gtfsSchedule)
                 stops = GtfsStops(stopsCsv)
             } catch (e: Exception) {
                 throw NoDataException("Stop data unavailable")
@@ -43,7 +45,7 @@ internal class GtfsArrivals(
     }
 
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {
-        val stop = "A42N"
+        val stop = settings.gtfsStop
         val arrivals = getNextArrivalsForStop(stop, feedMessage.entity)
         return ArrivalsInfo(stops.stopIdToName(stop), arrivals)
     }

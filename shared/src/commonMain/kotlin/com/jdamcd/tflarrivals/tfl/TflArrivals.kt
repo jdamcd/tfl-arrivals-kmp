@@ -4,6 +4,8 @@ import com.jdamcd.tflarrivals.Arrival
 import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
 import com.jdamcd.tflarrivals.NoDataException
+import com.jdamcd.tflarrivals.Settings
+import com.jdamcd.tflarrivals.SettingsConfig
 import com.jdamcd.tflarrivals.StopDetails
 import com.jdamcd.tflarrivals.StopResult
 import com.jdamcd.tflarrivals.TflSearch
@@ -12,14 +14,14 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal class TflArrivals(
     private val api: TflApi,
-    private val settings: TflSettings
+    private val settings: Settings
 ) : Arrivals,
     TflSearch {
 
     @Throws(NoDataException::class, CancellationException::class)
     override suspend fun latest(): ArrivalsInfo {
         try {
-            val model = formatArrivals(api.fetchArrivals(settings.selectedStopId))
+            val model = formatArrivals(api.fetchArrivals(settings.tflStopId))
             if (model.arrivals.isNotEmpty()) {
                 return model
             } else {
@@ -53,11 +55,11 @@ internal class TflArrivals(
             apiArrivals
                 .sortedBy { it.timeToStation }
                 .filter {
-                    settings.platformFilter.isEmpty() ||
-                        it.platformName.contains(settings.platformFilter, ignoreCase = true)
+                    settings.tflPlatform.isEmpty() ||
+                        it.platformName.contains(settings.tflPlatform, ignoreCase = true)
                 }.filter { arrival ->
-                    settings.directionFilter == SettingsConfig.DIRECTION_FILTER_DEFAULT ||
-                        arrival.direction.contains(settings.directionFilter)
+                    settings.tflDirection == SettingsConfig.TFL_DIRECTION_DEFAULT ||
+                        arrival.direction.contains(settings.tflDirection)
                 }.take(3)
                 .map {
                     Arrival(
@@ -75,11 +77,11 @@ internal class TflArrivals(
     }
 
     private fun stationInfo(): String {
-        val station = formatStation(settings.selectedStopName)
-        return if (settings.platformFilter.isNotEmpty()) {
-            "$station: ${settings.platformFilter}"
-        } else if (settings.directionFilter != SettingsConfig.DIRECTION_FILTER_DEFAULT) {
-            "$station: ${formatDirection(settings.directionFilter)}"
+        val station = formatStation(settings.tflStopName)
+        return if (settings.tflPlatform.isNotEmpty()) {
+            "$station: ${settings.tflPlatform}"
+        } else if (settings.tflDirection != SettingsConfig.TFL_DIRECTION_DEFAULT) {
+            "$station: ${formatDirection(settings.tflDirection)}"
         } else {
             station
         }

@@ -26,8 +26,8 @@ internal class GtfsApi {
             }
         }
 
-    suspend fun fetchFeedMessage(): FeedMessage {
-        val bodyBytes = client.get(ENDPOINT).bodyAsBytes()
+    suspend fun fetchFeedMessage(url: String): FeedMessage {
+        val bodyBytes = client.get(url).bodyAsBytes()
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
@@ -81,5 +81,3 @@ private fun Path.createParentDirectories() {
 }
 
 expect fun getFilesDir(): String
-
-private const val ENDPOINT = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
