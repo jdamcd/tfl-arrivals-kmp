@@ -2,7 +2,7 @@ import SwiftUI
 import TflArrivals
 
 struct GtfsSettingsView: View {
-    private let settings = Settings()
+    private let settings = MacDI().settings
 
     @State private var realtimeUrl: String
     @State private var scheduleUrl: String

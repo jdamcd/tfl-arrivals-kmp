@@ -8,6 +8,7 @@ coroutines = "1.9.0"
 dateTime = "0.6.1"
 wire = "5.1.0"
 okio = "3.9.1"
+koin = "4.0.0"
 
 [libraries]
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -19,6 +20,7 @@ kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutine
 kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "dateTime" }
 wire-runtime = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 
 [bundles]
 ktor-common = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]

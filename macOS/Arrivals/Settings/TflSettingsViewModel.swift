@@ -5,8 +5,8 @@ import TflArrivals
 class TflSettingsViewModel: ObservableObject {
     @Published var state: SettingsState = .idle
 
-    private let fetcher = TransitSystem().tflSearch()
-    private let settings = Settings()
+    private let fetcher = MacDI().tflSearch
+    private let settings = MacDI().settings
 
     func reset() {
         state = .idle

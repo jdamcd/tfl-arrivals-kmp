@@ -1,9 +1,14 @@
 import SwiftUI
+import TflArrivals
 
 @main
 struct ArrivalsApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @State private var settingsWindow: NSWindow?
+
+    init() {
+        ArrivalsKt.doInitKoin()
+    }
 
     var body: some Scene {
         Settings {

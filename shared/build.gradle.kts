@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.kotlin.coroutines)
             implementation(libs.wire.runtime)
             implementation(libs.okio)
+            implementation(libs.koin)
         }
 
         commonTest.dependencies {

@@ -4,21 +4,72 @@ import com.jdamcd.tflarrivals.gtfs.GtfsApi
 import com.jdamcd.tflarrivals.gtfs.GtfsArrivals
 import com.jdamcd.tflarrivals.tfl.TflApi
 import com.jdamcd.tflarrivals.tfl.TflArrivals
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.roundToInt
 
-object TransitSystem {
-    private val settings = Settings()
-    private val tflArrivals = TflArrivals(TflApi(), settings)
-    private val mtaArrivals = GtfsArrivals(GtfsApi(), settings)
+@Suppress("Unused")
+fun initKoin() {
+    startKoin {
+        modules(commonModule())
+    }
+}
 
-    fun tflSearch(): TflSearch = tflArrivals
-    fun arrivals() = object : Arrivals {
-        override suspend fun latest(): ArrivalsInfo = if (Settings().mode == SettingsConfig.MODE_TFL) {
-            tflArrivals.latest()
-        } else {
-            mtaArrivals.latest()
+@Suppress("Unused")
+class MacDI : KoinComponent {
+    val arrivals: Arrivals by inject()
+    val settings: Settings by inject()
+    val tflSearch: TflSearch by inject()
+}
+
+fun commonModule() = module {
+    single { Settings() }
+    single { TflApi(get()) }
+    single { GtfsApi(get()) }
+    single { TflArrivals(get(), get()) }
+    single { GtfsArrivals(get(), get()) }
+    single<Arrivals> { ArrivalsSwitcher(get(), get(), get()) }
+    single<TflSearch> { get<TflArrivals>() }
+    single {
+        HttpClient {
+            install(HttpTimeout) {
+                requestTimeoutMillis = 10_000 // 10 seconds
+            }
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            install(Logging) {
+                level = LogLevel.INFO
+            }
         }
+    }
+}
+
+internal class ArrivalsSwitcher(
+    private val tfl: TflArrivals,
+    private val gtfs: GtfsArrivals,
+    private val settings: Settings
+) : Arrivals {
+
+    override suspend fun latest(): ArrivalsInfo = if (settings.mode == SettingsConfig.MODE_TFL) {
+        tfl.latest()
+    } else {
+        gtfs.latest()
     }
 }
 
