@@ -5,14 +5,19 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.serialization.JsonConvertException
 import kotlinx.serialization.Serializable
 
 internal class TflApi(private val client: HttpClient) {
 
-    suspend fun fetchArrivals(station: String): List<ApiArrival> = client
-        .get("$BASE_URL/StopPoint/$station/Arrivals") {
+    suspend fun fetchArrivals(station: String): List<ApiArrival> = try {
+        client.get("$BASE_URL/StopPoint/$station/Arrivals") {
             parameter("app_key", BuildKonfig.TFL_APP_KEY)
         }.body()
+    } catch (e: JsonConvertException) {
+        // Empty body at the end of the line
+        emptyList()
+    }
 
     suspend fun searchStations(query: String): ApiSearchResult = client
         .get("$BASE_URL/StopPoint/Search") {

@@ -93,7 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 class PopoverDelegate: NSObject, NSPopoverDelegate {
     var onShow: (() -> Void)?
 
-    func popoverDidShow(_: Notification) {
+    func popoverWillShow(_: Notification) {
         onShow?()
     }
 

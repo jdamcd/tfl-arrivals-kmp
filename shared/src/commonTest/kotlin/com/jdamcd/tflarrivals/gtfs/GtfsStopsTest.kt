@@ -4,7 +4,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class StopsTest {
+class GtfsStopsTest {
 
     private lateinit var stops: GtfsStops
 

@@ -49,9 +49,6 @@ struct ArrivalsView: View {
         .padding(.horizontal, 8)
         .padding(.top, 8)
         .frame(width: 350, height: 110)
-        .onAppear {
-            viewModel.load()
-        }
         .onReceive(popoverState.$isShown) { isShown in
             if isShown {
                 viewModel.load()
