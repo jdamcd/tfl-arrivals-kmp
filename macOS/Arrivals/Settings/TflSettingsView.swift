@@ -68,7 +68,7 @@ struct TflSettingsView: View {
                     if let selectedResult {
                         viewModel.save(
                             stopPoint: selectedResult,
-                            platformFilter: platformFilter,
+                            platformFilter: platformFilter.trim(),
                             directionFilter: directionFilter
                         )
                         NSApp.keyWindow?.close()

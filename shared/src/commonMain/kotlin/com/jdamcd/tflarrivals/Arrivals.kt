@@ -10,6 +10,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -33,11 +34,12 @@ class MacDI : KoinComponent {
 }
 
 fun commonModule() = module {
+    single<Clock> { Clock.System }
     single { Settings() }
     single { TflApi(get()) }
     single { GtfsApi(get()) }
     single { TflArrivals(get(), get()) }
-    single { GtfsArrivals(get(), get()) }
+    single { GtfsArrivals(get(), get(), get()) }
     single<Arrivals> { ArrivalsSwitcher(get(), get(), get()) }
     single<TflSearch> { get<TflArrivals>() }
     single {

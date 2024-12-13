@@ -2,6 +2,7 @@ package com.jdamcd.tflarrivals.gtfs
 
 import com.google.transit.realtime.FeedEntity
 import com.google.transit.realtime.FeedMessage
+import com.google.transit.realtime.TripUpdate
 import com.jdamcd.tflarrivals.Arrival
 import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
@@ -13,6 +14,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal class GtfsArrivals(
     private val api: GtfsApi,
+    private val clock: Clock,
     private val settings: Settings
 ) : Arrivals {
 
@@ -35,13 +37,19 @@ internal class GtfsArrivals(
 
     private suspend fun updateStops() {
         if (!::stops.isInitialized) {
-            try {
-                val stopsCsv = api.downloadStops(settings.gtfsSchedule)
-                stops = GtfsStops(stopsCsv)
-            } catch (e: Exception) {
-                throw NoDataException("Stop data unavailable")
+            stops = if (hasFreshStops()) {
+                GtfsStops(api.readStops())
+            } else {
+                GtfsStops(api.downloadStops(settings.gtfsSchedule))
             }
         }
+    }
+
+    private fun hasFreshStops(): Boolean {
+        val lastDownload = api.lastDownload()
+        val currentTime = clock.now().toEpochMilliseconds()
+        val twoDaysInMillis = 48 * 60 * 60 * 1000
+        return lastDownload != null && lastDownload + twoDaysInMillis > currentTime
     }
 
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {
@@ -59,27 +67,32 @@ internal class GtfsArrivals(
         .flatMap { tripUpdate ->
             tripUpdate.stop_time_update
                 .filter { it.stop_id == stopId }
-                .map { stopTimeUpdate ->
-                    val lastStop = stops.stopIdToName(tripUpdate.stop_time_update.last().stop_id)
-                    val seconds = secondsToStop(stopTimeUpdate.arrival?.time)
-                    Arrival(
-                        stopTimeUpdate.hashCode(),
-                        "${tripUpdate.trip.route_id} - $lastStop",
-                        formatTime(seconds),
-                        seconds
-                    )
-                }
+                .map { createArrival(tripUpdate, it) }
         }
         .filter { it.secondsToStop >= 0 }
         .sortedBy { it.secondsToStop }
         .take(3)
         .toList()
 
+    private fun createArrival(
+        tripUpdate: TripUpdate,
+        stopTimeUpdate: TripUpdate.StopTimeUpdate
+    ): Arrival {
+        val lastStop = stops.stopIdToName(tripUpdate.stop_time_update.last().stop_id)
+        val seconds = secondsToStop(stopTimeUpdate.arrival?.time)
+        return Arrival(
+            stopTimeUpdate.hashCode(),
+            "${tripUpdate.trip.route_id} - $lastStop",
+            formatTime(seconds),
+            seconds
+        )
+    }
+
     private fun secondsToStop(time: Long?): Int {
         if (time == null) {
             return Int.MAX_VALUE
         } else {
-            val now = Clock.System.now().epochSeconds
+            val now = clock.now().epochSeconds
             return (time - now).toInt()
         }
     }

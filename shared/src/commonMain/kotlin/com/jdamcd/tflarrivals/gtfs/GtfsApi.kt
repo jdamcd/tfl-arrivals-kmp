@@ -14,29 +14,38 @@ import okio.use
 
 internal class GtfsApi(private val client: HttpClient) {
 
+    private val baseDir = getFilesDir()
+    private val outputDir = "$baseDir/gtfs".toPath()
+    private val stopsFileName = "stops.txt"
+
     suspend fun fetchFeedMessage(url: String): FeedMessage {
         val bodyBytes = client.get(url).bodyAsBytes()
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
-    suspend fun downloadStops(url: String): String {
-        val baseDir = getFilesDir()
-        val tempZipFile = "$baseDir/gtfs.zip".toPath()
-        val outputDir = "$baseDir/gtfs".toPath()
-        val stopsFileName = "stops.txt"
+    fun lastDownload(): Long? {
+        val path = outputDir.resolve(stopsFileName)
+        return if (FileSystem.SYSTEM.exists(path)) {
+            FileSystem.SYSTEM.metadata(path).lastModifiedAtMillis
+        } else {
+            null
+        }
+    }
 
+    fun readStops(): String {
+        val stopsPath = outputDir.resolve(stopsFileName)
+        return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
+    }
+
+    suspend fun downloadStops(url: String): String {
+        val tempZipFile = "$baseDir/gtfs.zip".toPath()
         try {
             val zipContent = client.get(url).readRawBytes()
             FileSystem.SYSTEM.write(tempZipFile) {
                 write(zipContent)
             }
             unpackZip(tempZipFile, outputDir)
-
-            val extractedFiles = FileSystem.SYSTEM.listRecursively(outputDir).toList()
-            val stopsPath = extractedFiles.find { it.name == stopsFileName }
-                ?: throw IllegalArgumentException("$stopsFileName not found in package")
-
-            return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
+            return readStops()
         } finally {
             FileSystem.SYSTEM.delete(tempZipFile)
         }
