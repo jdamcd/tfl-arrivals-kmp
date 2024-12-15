@@ -31,6 +31,7 @@ class MacDI : KoinComponent {
     val arrivals: Arrivals by inject()
     val settings: Settings by inject()
     val tflSearch: TflSearch by inject()
+    val gtfsSearch: GtfsSearch by inject()
 }
 
 fun commonModule() = module {
@@ -42,6 +43,7 @@ fun commonModule() = module {
     single { GtfsArrivals(get(), get(), get()) }
     single<Arrivals> { ArrivalsSwitcher(get(), get(), get()) }
     single<TflSearch> { get<TflArrivals>() }
+    single<GtfsSearch> { get<GtfsArrivals>() }
     single {
         HttpClient {
             install(HttpTimeout) {
@@ -86,6 +88,11 @@ interface TflSearch {
 
     @Throws(CancellationException::class)
     suspend fun stopDetails(id: String): StopDetails
+}
+
+interface GtfsSearch {
+    @Throws(CancellationException::class)
+    suspend fun getStops(feedUrl: String, scheduleUrl: String): Map<String, String>
 }
 
 data class ArrivalsInfo(

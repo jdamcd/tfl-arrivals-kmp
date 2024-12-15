@@ -1,6 +1,18 @@
 import Combine
 import SwiftUI
 
+struct ResultsArea<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack(spacing: 0) {
+            content
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(minHeight: 75, alignment: .center)
+    }
+}
+
 struct DebouncingTextField: View {
     @StateObject private var viewModel: DebouncingTextFieldModel
     @Binding private var value: String

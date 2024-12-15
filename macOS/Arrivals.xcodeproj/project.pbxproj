@@ -12,13 +12,13 @@
 		4938625C297F4BE700C61AE3 /* ArrivalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4938625B297F4BE700C61AE3 /* ArrivalsView.swift */; };
 		4938625E297F4BE900C61AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4938625D297F4BE900C61AE3 /* Assets.xcassets */; };
 		49386261297F4BE900C61AE3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49386260297F4BE900C61AE3 /* Preview Assets.xcassets */; };
-		494573E929FD42DD00971BF4 /* TflSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494573E829FD42DD00971BF4 /* TflSettingsViewModel.swift */; };
 		494945A829F7ABCD00D463D7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494945A729F7ABCD00D463D7 /* SettingsView.swift */; };
 		498B00EB298474E7001E83C4 /* ArrivalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B00EA298474E7001E83C4 /* ArrivalsViewModel.swift */; };
 		499D198E2B22721D0023FFD2 /* LUR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49386287298348A100C61AE3 /* LUR.ttf */; };
 		49D28FF72B1B76600015C9D7 /* SettingsAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 49D28FF62B1B76600015C9D7 /* SettingsAccess */; };
 		49DFCAFC2D07881000CDBE29 /* TflSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFCAFB2D0787F700CDBE29 /* TflSettingsView.swift */; };
 		49DFCB032D07A2C700CDBE29 /* GtfsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFCB022D07A2BF00CDBE29 /* GtfsSettingsView.swift */; };
+		49DFCB0B2D0E059D00CDBE29 /* MtaSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFCB0A2D0E059D00CDBE29 /* MtaSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,11 +50,11 @@
 		49386271297F4BE900C61AE3 /* ArrivalsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArrivalsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		493862862983404100C61AE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		49386287298348A100C61AE3 /* LUR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LUR.ttf; sourceTree = "<group>"; };
-		494573E829FD42DD00971BF4 /* TflSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TflSettingsViewModel.swift; sourceTree = "<group>"; };
 		494945A729F7ABCD00D463D7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		498B00EA298474E7001E83C4 /* ArrivalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsViewModel.swift; sourceTree = "<group>"; };
 		49DFCAFB2D0787F700CDBE29 /* TflSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TflSettingsView.swift; sourceTree = "<group>"; };
 		49DFCB022D07A2BF00CDBE29 /* GtfsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GtfsSettingsView.swift; sourceTree = "<group>"; };
+		49DFCB0A2D0E059D00CDBE29 /* MtaSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MtaSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -136,8 +136,8 @@
 			children = (
 				494945A729F7ABCD00D463D7 /* SettingsView.swift */,
 				49DFCAFB2D0787F700CDBE29 /* TflSettingsView.swift */,
-				494573E829FD42DD00971BF4 /* TflSettingsViewModel.swift */,
 				49DFCB022D07A2BF00CDBE29 /* GtfsSettingsView.swift */,
+				49DFCB0A2D0E059D00CDBE29 /* MtaSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -301,7 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				494573E929FD42DD00971BF4 /* TflSettingsViewModel.swift in Sources */,
+				49DFCB0B2D0E059D00CDBE29 /* MtaSettingsView.swift in Sources */,
 				4938625C297F4BE700C61AE3 /* ArrivalsView.swift in Sources */,
 				49DFCB032D07A2C700CDBE29 /* GtfsSettingsView.swift in Sources */,
 				498B00EB298474E7001E83C4 /* ArrivalsViewModel.swift in Sources */,

@@ -12,5 +12,5 @@ internal class GtfsStops(stops: String) {
             .drop(1) // Skip headers
             .toMap()
 
-    fun stopIdToName(stopId: String?) = stopIdToName[stopId] ?: "Unknown"
+    fun stopIdToName(stopId: String) = stopIdToName[stopId]
 }

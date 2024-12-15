@@ -2,7 +2,7 @@ import SwiftUI
 import TflArrivals
 
 struct TflSettingsView: View {
-    @ObservedObject var viewModel = TflSettingsViewModel()
+    @ObservedObject private var viewModel = TflSettingsViewModel()
 
     @State private var searchQuery: String = ""
     @State private var selectedResult: StopResult?
@@ -25,7 +25,7 @@ struct TflSettingsView: View {
                 .autocorrectionDisabled()
                 Image(systemName: "questionmark.app")
                     .foregroundColor(Color.gray)
-                    .help("London Overground, Tube, DLR, and Tram stations are supported. Arrival times are not available at the end of the line.")
+                    .help("London Overground, Tube, DLR, and Tram stations. No arrival times at the end of the line.")
             }
             ResultsArea {
                 switch viewModel.state {
@@ -43,7 +43,7 @@ struct TflSettingsView: View {
                     }
                     .listStyle(PlainListStyle())
                 case .idle:
-                    Text("Search to select station")
+                    Text("Search for a station")
                 case .empty:
                     Text("No results found")
                 case .error:
@@ -83,16 +83,72 @@ struct TflSettingsView: View {
     }
 }
 
-private struct ResultsArea<Content: View>: View {
-    @ViewBuilder var content: Content
+@MainActor
+private class TflSettingsViewModel: ObservableObject {
+    @Published var state: SettingsState = .idle
 
-    var body: some View {
-        VStack(spacing: 0) {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .frame(minHeight: 75, alignment: .center)
+    private let fetcher = MacDI().tflSearch
+    private let settings = MacDI().settings
+
+    func reset() {
+        state = .idle
     }
+
+    func performSearch(_ query: String) {
+        state = .loading
+        Task {
+            do {
+                let result = try await fetcher.searchStops(query: query)
+                if result.isEmpty {
+                    state = .empty
+                } else {
+                    state = .data(result)
+                }
+            } catch {
+                state = .error
+            }
+        }
+    }
+
+    func disambiguate(stop: StopResult) {
+        state = .loading
+        Task {
+            do {
+                let result = try await fetcher.stopDetails(id: stop.id)
+                if result.children.isEmpty {
+                    state = .empty
+                } else {
+                    state = .data(result.children)
+                }
+            } catch {
+                state = .error
+            }
+        }
+    }
+
+    func initialPlatform() -> String {
+        settings.tflPlatform
+    }
+
+    func initialDirection() -> String {
+        settings.tflDirection
+    }
+
+    func save(stopPoint: StopResult, platformFilter: String, directionFilter: String) {
+        settings.tflStopName = stopPoint.name
+        settings.tflStopId = stopPoint.id
+        settings.tflPlatform = platformFilter
+        settings.tflDirection = directionFilter
+        settings.mode = SettingsConfig().MODE_TFL
+    }
+}
+
+private enum SettingsState: Equatable {
+    case idle
+    case loading
+    case data([StopResult])
+    case empty
+    case error
 }
 
 #Preview {

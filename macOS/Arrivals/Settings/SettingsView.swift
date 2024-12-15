@@ -2,7 +2,7 @@ import SwiftUI
 import TflArrivals
 
 struct SettingsView: View {
-    let transitSystem = ["TfL", "Custom GTFS"] // TODO: Add MTA
+    let transitSystem = ["TfL", "MTA", "Custom GTFS"]
     @State private var selector: String
 
     init() {
@@ -23,8 +23,8 @@ struct SettingsView: View {
             switch selector {
             case "TfL":
                 TflSettingsView()
-            case "Custom GTFS":
-                GtfsSettingsView()
+            case "MTA":
+                MtaSettingsView()
             default:
                 GtfsSettingsView()
             }
