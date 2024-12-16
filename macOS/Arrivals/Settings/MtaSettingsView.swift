@@ -3,18 +3,18 @@ import TflArrivals
 
 struct MtaSettingsView: View {
     @ObservedObject private var viewModel = MtaSettingsViewModel()
-    
+
     @State private var selectedLine: String
     @State private var selectedStop: String?
-    
+
     private var lines = Mta().realtime
-    
+
     init() {
         selectedLine = lines.keys.sorted().first!
     }
 
     var body: some View {
-        Section() {
+        Section {
             Picker("Line",
                    selection: $selectedLine) {
                 ForEach(lines.keys.sorted(), id: \.self) {
@@ -61,11 +61,11 @@ private class MtaSettingsViewModel: ObservableObject {
 
     private let fetcher = MacDI().gtfsSearch
     private let settings = MacDI().settings
-    
+
     private let schedule = Mta().SCHEDULE
 
     func getStops(feedUrl: String) {
-        if (state != .loading) {
+        if state != .loading {
             state = .loading
             Task {
                 do {
@@ -89,7 +89,7 @@ private class MtaSettingsViewModel: ObservableObject {
 private enum SettingsState: Equatable {
     case idle
     case loading
-    case data([String : String])
+    case data([String: String])
     case error
 }
 

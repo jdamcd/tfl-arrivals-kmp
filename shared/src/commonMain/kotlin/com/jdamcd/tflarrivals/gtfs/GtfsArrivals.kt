@@ -17,7 +17,8 @@ internal class GtfsArrivals(
     private val api: GtfsApi,
     private val clock: Clock,
     private val settings: Settings
-) : Arrivals, GtfsSearch {
+) : Arrivals,
+    GtfsSearch {
 
     private lateinit var stops: GtfsStops
 

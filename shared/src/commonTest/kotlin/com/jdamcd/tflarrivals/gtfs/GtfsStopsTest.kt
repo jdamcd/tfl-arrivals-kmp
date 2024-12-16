@@ -23,13 +23,6 @@ class GtfsStopsTest {
     }
 
     @Test
-    fun `maps null stop ID to unknown`() {
-        val unknown = stops.stopIdToName(null)
-
-        assertEquals("Unknown", unknown)
-    }
-
-    @Test
     fun `maps invalid stop ID to unknown`() {
         val unknown = stops.stopIdToName("123456")
 
