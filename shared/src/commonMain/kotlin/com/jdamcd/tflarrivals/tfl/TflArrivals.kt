@@ -53,6 +53,7 @@ internal class TflArrivals(
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
         val arrivals =
             apiArrivals
+                .asSequence()
                 .sortedBy { it.timeToStation }
                 .filter {
                     settings.tflPlatform.isEmpty() ||
@@ -70,6 +71,7 @@ internal class TflArrivals(
                         it.timeToStation
                     )
                 }
+                .toList()
         return ArrivalsInfo(
             station = stationInfo(),
             arrivals = arrivals

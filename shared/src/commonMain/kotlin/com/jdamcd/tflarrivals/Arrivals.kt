@@ -2,6 +2,7 @@ package com.jdamcd.tflarrivals
 
 import com.jdamcd.tflarrivals.gtfs.GtfsApi
 import com.jdamcd.tflarrivals.gtfs.GtfsArrivals
+import com.jdamcd.tflarrivals.gtfs.MtaSearch
 import com.jdamcd.tflarrivals.tfl.TflApi
 import com.jdamcd.tflarrivals.tfl.TflArrivals
 import io.ktor.client.HttpClient
@@ -43,7 +44,7 @@ fun commonModule() = module {
     single { GtfsArrivals(get(), get(), get()) }
     single<Arrivals> { ArrivalsSwitcher(get(), get(), get()) }
     single<TflSearch> { get<TflArrivals>() }
-    single<GtfsSearch> { get<GtfsArrivals>() }
+    single<GtfsSearch> { MtaSearch(get()) }
     single {
         HttpClient {
             install(HttpTimeout) {
@@ -92,7 +93,7 @@ interface TflSearch {
 
 interface GtfsSearch {
     @Throws(CancellationException::class)
-    suspend fun getStops(feedUrl: String, scheduleUrl: String): Map<String, String>
+    suspend fun getStops(feedUrl: String): Map<String, String>
 }
 
 data class ArrivalsInfo(

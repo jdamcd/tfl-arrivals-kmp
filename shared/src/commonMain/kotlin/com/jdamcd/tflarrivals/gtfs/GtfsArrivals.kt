@@ -6,7 +6,6 @@ import com.google.transit.realtime.TripUpdate
 import com.jdamcd.tflarrivals.Arrival
 import com.jdamcd.tflarrivals.Arrivals
 import com.jdamcd.tflarrivals.ArrivalsInfo
-import com.jdamcd.tflarrivals.GtfsSearch
 import com.jdamcd.tflarrivals.NoDataException
 import com.jdamcd.tflarrivals.Settings
 import com.jdamcd.tflarrivals.formatTime
@@ -17,8 +16,7 @@ internal class GtfsArrivals(
     private val api: GtfsApi,
     private val clock: Clock,
     private val settings: Settings
-) : Arrivals,
-    GtfsSearch {
+) : Arrivals {
 
     private lateinit var stops: GtfsStops
 
@@ -35,19 +33,6 @@ internal class GtfsArrivals(
         } catch (e: Exception) {
             throw NoDataException("No connection")
         }
-    }
-
-    override suspend fun getStops(feedUrl: String, scheduleUrl: String): Map<String, String> {
-        val tempStops = GtfsStops(api.downloadStops(scheduleUrl))
-        val feedMessage = api.fetchFeedMessage(feedUrl)
-
-        return feedMessage.entity
-            .asSequence()
-            .mapNotNull { it.trip_update }
-            .flatMap { it.stop_time_update }
-            .mapNotNull { it.stop_id }
-            .distinct()
-            .associateWith { "${tempStops.stopIdToName(it)} ($it)" }
     }
 
     private suspend fun updateStops() {

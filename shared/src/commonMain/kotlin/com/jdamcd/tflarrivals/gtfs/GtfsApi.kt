@@ -15,7 +15,7 @@ import okio.use
 internal class GtfsApi(private val client: HttpClient) {
 
     private val baseDir = getFilesDir()
-    private val outputDir = "$baseDir/gtfs".toPath()
+    private val defaultDir = "$baseDir/gtfs".toPath()
     private val stopsFileName = "stops.txt"
 
     suspend fun fetchFeedMessage(url: String): FeedMessage {
@@ -23,7 +23,7 @@ internal class GtfsApi(private val client: HttpClient) {
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
-    fun lastDownload(): Long? {
+    fun lastDownload(outputDir: Path = defaultDir): Long? {
         val path = outputDir.resolve(stopsFileName)
         return if (FileSystem.SYSTEM.exists(path)) {
             FileSystem.SYSTEM.metadata(path).lastModifiedAtMillis
@@ -32,20 +32,21 @@ internal class GtfsApi(private val client: HttpClient) {
         }
     }
 
-    fun readStops(): String {
+    fun readStops(outputDir: Path = defaultDir): String {
         val stopsPath = outputDir.resolve(stopsFileName)
         return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
     }
 
-    suspend fun downloadStops(url: String): String {
+    suspend fun downloadStops(url: String, folder: String = "gtfs"): String {
         val tempZipFile = "$baseDir/gtfs.zip".toPath()
+        val outputDir = "$baseDir/$folder".toPath()
         try {
             val zipContent = client.get(url).readRawBytes()
             FileSystem.SYSTEM.write(tempZipFile) {
                 write(zipContent)
             }
             unpackZip(tempZipFile, outputDir)
-            return readStops()
+            return readStops(outputDir)
         } finally {
             FileSystem.SYSTEM.delete(tempZipFile)
         }

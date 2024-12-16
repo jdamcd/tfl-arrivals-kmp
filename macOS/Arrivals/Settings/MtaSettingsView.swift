@@ -62,14 +62,12 @@ private class MtaSettingsViewModel: ObservableObject {
     private let fetcher = MacDI().gtfsSearch
     private let settings = MacDI().settings
 
-    private let schedule = Mta().SCHEDULE
-
     func getStops(feedUrl: String) {
         if state != .loading {
             state = .loading
             Task {
                 do {
-                    let result = try await fetcher.getStops(feedUrl: feedUrl, scheduleUrl: schedule)
+                    let result = try await fetcher.getStops(feedUrl: feedUrl)
                     state = .data(result)
                 } catch {
                     state = .error
@@ -80,7 +78,7 @@ private class MtaSettingsViewModel: ObservableObject {
 
     func save(lineUrl: String, stopId: String) {
         settings.gtfsRealtime = lineUrl
-        settings.gtfsSchedule = schedule
+        settings.gtfsSchedule = Mta().SCHEDULE
         settings.gtfsStop = stopId
         settings.mode = SettingsConfig().MODE_GTFS
     }
