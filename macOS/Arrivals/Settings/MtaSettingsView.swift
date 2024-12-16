@@ -5,7 +5,7 @@ struct MtaSettingsView: View {
     @ObservedObject private var viewModel = MtaSettingsViewModel()
 
     @State private var selectedLine: String
-    @State private var selectedStop: String?
+    @State private var selectedStop: StopResult?
 
     private var lines = Mta().realtime
 
@@ -29,8 +29,8 @@ struct MtaSettingsView: View {
             ResultsArea {
                 switch viewModel.state {
                 case let .data(results):
-                    List(results.keys.sorted(), id: \.self, selection: $selectedStop) { key in
-                        Text(results[key]!)
+                    List(results, id: \.self, selection: $selectedStop) { result in
+                        Text(result.name)
                     }
                     .listStyle(PlainListStyle())
                 case .idle:
@@ -45,7 +45,7 @@ struct MtaSettingsView: View {
             HStack {
                 Spacer()
                 Button("Save") {
-                    viewModel.save(lineUrl: lines[selectedLine]!, stopId: selectedStop!)
+                    viewModel.save(lineUrl: lines[selectedLine]!, stopId: selectedStop!.id)
                     NSApp.keyWindow?.close()
                 }
                 .disabled(selectedStop == nil)
@@ -87,7 +87,7 @@ private class MtaSettingsViewModel: ObservableObject {
 private enum SettingsState: Equatable {
     case idle
     case loading
-    case data([String: String])
+    case data([StopResult])
     case error
 }
 

@@ -93,7 +93,7 @@ interface TflSearch {
 
 interface GtfsSearch {
     @Throws(CancellationException::class)
-    suspend fun getStops(feedUrl: String): Map<String, String>
+    suspend fun getStops(feedUrl: String): List<StopResult>
 }
 
 data class ArrivalsInfo(
