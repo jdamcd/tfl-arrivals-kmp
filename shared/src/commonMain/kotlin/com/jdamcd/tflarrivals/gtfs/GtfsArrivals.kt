@@ -78,12 +78,12 @@ internal class GtfsArrivals(
         tripUpdate: TripUpdate,
         stopTimeUpdate: TripUpdate.StopTimeUpdate
     ): Arrival {
-        val last = tripUpdate.stop_time_update.last().stop_id!!
-        val lastStop = stops.stopIdToName(last) ?: last
-        val seconds = secondsToStop(stopTimeUpdate.arrival?.time)
+        val destinationId = tripUpdate.stop_time_update.last().stop_id!!
+        val destinationName = stops.stopIdToName(destinationId) ?: destinationId
+        val seconds = secondsToStop(stopTimeUpdate.arrival?.time ?: stopTimeUpdate.departure?.time)
         return Arrival(
             stopTimeUpdate.hashCode(),
-            "${tripUpdate.trip.route_id} - $lastStop",
+            "${tripUpdate.trip.route_id} - $destinationName",
             formatTime(seconds),
             seconds
         )
