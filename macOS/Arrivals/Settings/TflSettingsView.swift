@@ -55,12 +55,20 @@ struct TflSettingsView: View {
             }
 
             Picker("Direction", selection: $directionFilter) {
-                ForEach(directions, id: \.self) {
-                    Text($0)
+                ForEach(directions, id: \.self) { direction in
+                    Text(direction.capitalized).tag(direction)
                 }
-            }.pickerStyle(.automatic)
+            }
+            .pickerStyle(.automatic)
+            .onAppear {
+                platformFilter = viewModel.initialPlatform()
+            }
+
             TextField("Platform", text: $platformFilter)
                 .autocorrectionDisabled()
+                .onAppear {
+                    directionFilter = viewModel.initialDirection()
+                }
 
             HStack {
                 Spacer()
@@ -76,9 +84,6 @@ struct TflSettingsView: View {
                 }.disabled(selectedResult == nil)
                     .buttonStyle(.borderedProminent)
             }
-        }.onAppear {
-            platformFilter = viewModel.initialPlatform()
-            directionFilter = viewModel.initialDirection()
         }
     }
 }

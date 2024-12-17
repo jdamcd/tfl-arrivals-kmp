@@ -4,7 +4,7 @@ import TflArrivals
 struct MtaSettingsView: View {
     @ObservedObject private var viewModel = MtaSettingsViewModel()
 
-    @State private var selectedLine: String
+    @State private var selectedLine: String?
     @State private var selectedStop: StopResult?
 
     private var lines = Mta().realtime
@@ -15,15 +15,19 @@ struct MtaSettingsView: View {
 
     var body: some View {
         Section {
-            Picker("Line",
-                   selection: $selectedLine) {
-                ForEach(lines.keys.sorted(), id: \.self) {
-                    Text($0)
+            Picker("Line", selection: $selectedLine) {
+                Text("--").tag(String?.none)
+                ForEach(lines.keys.sorted(), id: \.self) { line in
+                    Text(line).tag(String?.some(line))
                 }
                 .pickerStyle(.menu)
-                .onChange(of: selectedLine) { newValue in
+                .onChange(of: selectedLine ?? "") { newValue in
                     selectedStop = nil
-                    viewModel.getStops(feedUrl: lines[newValue]!)
+                    if newValue.isNotEmpty {
+                        viewModel.getStops(feedUrl: lines[newValue]!)
+                    } else {
+                        viewModel.reset()
+                    }
                 }
             }
             ResultsArea {
@@ -45,10 +49,10 @@ struct MtaSettingsView: View {
             HStack {
                 Spacer()
                 Button("Save") {
-                    viewModel.save(lineUrl: lines[selectedLine]!, stopId: selectedStop!.id)
+                    viewModel.save(lineUrl: lines[selectedLine!]!, stopId: selectedStop!.id)
                     NSApp.keyWindow?.close()
                 }
-                .disabled(selectedStop == nil)
+                .disabled(selectedLine == nil || selectedStop == nil)
                 .buttonStyle(.borderedProminent)
             }
         }
@@ -61,6 +65,10 @@ private class MtaSettingsViewModel: ObservableObject {
 
     private let fetcher = MacDI().gtfsSearch
     private let settings = MacDI().settings
+
+    func reset() {
+        state = .idle
+    }
 
     func getStops(feedUrl: String) {
         if state != .loading {
