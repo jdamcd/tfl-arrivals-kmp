@@ -35,6 +35,12 @@ actual class Settings actual constructor() {
             defaults.setObject(value, SettingsConfig.TFL_DIRECTION)
         }
 
+    actual var gtfsStopsUpdated: Long
+        get() = defaults.integerForKey(SettingsConfig.GTFS_STOPS_UPDATED)
+        set(value) {
+            defaults.setInteger(value, SettingsConfig.GTFS_STOPS_UPDATED)
+        }
+
     actual var gtfsRealtime: String
         get() = defaults.stringForKey(SettingsConfig.GTFS_REALTIME) ?: SettingsConfig.GTFS_REALTIME_DEFAULT
         set(value) {

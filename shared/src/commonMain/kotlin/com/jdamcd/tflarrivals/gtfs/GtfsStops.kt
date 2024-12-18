@@ -13,13 +13,13 @@ internal class GtfsStops(stops: String) {
                 lines
                     .drop(1) // Skip header
                     .mapNotNull { line ->
-                    val parts = line.split(",")
-                    if (parts.size > maxOf(stopIdIndex, stopNameIndex)) {
-                        parts[stopIdIndex] to parts[stopNameIndex]
-                    } else {
-                        null
+                        val parts = line.split(",")
+                        if (parts.size > maxOf(stopIdIndex, stopNameIndex)) {
+                            parts[stopIdIndex] to parts[stopNameIndex]
+                        } else {
+                            null
+                        }
                     }
-                }
             }
             .toMap()
 

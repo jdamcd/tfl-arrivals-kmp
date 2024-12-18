@@ -6,6 +6,7 @@ expect class Settings() {
     var tflStopId: String
     var tflPlatform: String
     var tflDirection: String
+    var gtfsStopsUpdated: Long
     var gtfsRealtime: String
     var gtfsSchedule: String
     var gtfsStop: String
@@ -27,6 +28,7 @@ object SettingsConfig {
     const val TFL_DIRECTION = "tfl_direction"
     const val TFL_DIRECTION_DEFAULT = "all"
 
+    const val GTFS_STOPS_UPDATED = "gtfs_stops_updated"
     const val GTFS_REALTIME = "gtfs_realtime"
     const val GTFS_REALTIME_DEFAULT = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
     const val GTFS_SCHEDULE = "gtfs_schedule"

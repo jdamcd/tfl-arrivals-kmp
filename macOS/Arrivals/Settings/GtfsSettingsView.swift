@@ -27,6 +27,7 @@ struct GtfsSettingsView: View {
                         settings.gtfsRealtime = realtimeUrl.trim()
                         settings.gtfsSchedule = scheduleUrl.trim()
                         settings.gtfsStop = stopId.trim()
+                        settings.gtfsStopsUpdated = 0
                         settings.mode = SettingsConfig().MODE_GTFS
                         NSApp.keyWindow?.close()
                     }

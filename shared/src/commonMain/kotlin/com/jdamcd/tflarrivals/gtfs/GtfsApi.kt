@@ -23,15 +23,6 @@ internal class GtfsApi(private val client: HttpClient) {
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
-    fun lastDownload(outputDir: Path = defaultDir): Long? {
-        val path = outputDir.resolve(stopsFileName)
-        return if (FileSystem.SYSTEM.exists(path)) {
-            FileSystem.SYSTEM.metadata(path).lastModifiedAtMillis
-        } else {
-            null
-        }
-    }
-
     fun readStops(outputDir: Path = defaultDir): String {
         val stopsPath = outputDir.resolve(stopsFileName)
         return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }

@@ -36,20 +36,17 @@ internal class GtfsArrivals(
     }
 
     private suspend fun updateStops() {
-        if (!::stops.isInitialized) {
-            stops = if (hasFreshStops()) {
-                GtfsStops(api.readStops())
-            } else {
-                GtfsStops(api.downloadStops(settings.gtfsSchedule))
-            }
+        if (!hasFreshStops()) {
+            stops = GtfsStops(api.downloadStops(settings.gtfsSchedule))
+            settings.gtfsStopsUpdated = clock.now().epochSeconds
+        } else if (!::stops.isInitialized) {
+            stops = GtfsStops(api.readStops())
         }
     }
 
     private fun hasFreshStops(): Boolean {
-        val lastDownload = api.lastDownload()
-        val currentTime = clock.now().toEpochMilliseconds()
-        val twoDaysInMillis = 48 * 60 * 60 * 1000
-        return lastDownload != null && lastDownload + twoDaysInMillis > currentTime
+        val twoDaysInSeconds = 48 * 60 * 60
+        return settings.gtfsStopsUpdated + twoDaysInSeconds > clock.now().epochSeconds
     }
 
     private fun formatArrivals(feedMessage: FeedMessage): ArrivalsInfo {

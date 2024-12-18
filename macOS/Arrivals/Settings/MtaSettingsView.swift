@@ -88,6 +88,7 @@ private class MtaSettingsViewModel: ObservableObject {
         settings.gtfsRealtime = lineUrl
         settings.gtfsSchedule = Mta().SCHEDULE
         settings.gtfsStop = stopId
+        settings.gtfsStopsUpdated = 0
         settings.mode = SettingsConfig().MODE_GTFS
     }
 }
