@@ -2,7 +2,9 @@ package com.jdamcd.tflarrivals
 
 import com.jdamcd.tflarrivals.gtfs.GtfsApi
 import com.jdamcd.tflarrivals.gtfs.GtfsArrivals
+import com.jdamcd.tflarrivals.gtfs.IGtfsApi
 import com.jdamcd.tflarrivals.gtfs.MtaSearch
+import com.jdamcd.tflarrivals.tfl.ITflApi
 import com.jdamcd.tflarrivals.tfl.TflApi
 import com.jdamcd.tflarrivals.tfl.TflArrivals
 import io.ktor.client.HttpClient
@@ -38,8 +40,8 @@ class MacDI : KoinComponent {
 fun commonModule() = module {
     single<Clock> { Clock.System }
     single { Settings() }
-    single { TflApi(get()) }
-    single { GtfsApi(get()) }
+    single<ITflApi> { TflApi(get()) }
+    single<IGtfsApi> { GtfsApi(get()) }
     single { TflArrivals(get(), get()) }
     single { GtfsArrivals(get(), get(), get()) }
     single<Arrivals> { ArrivalsSwitcher(get(), get(), get()) }

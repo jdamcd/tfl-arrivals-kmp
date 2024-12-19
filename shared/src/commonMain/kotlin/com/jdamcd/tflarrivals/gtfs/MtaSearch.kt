@@ -3,7 +3,7 @@ package com.jdamcd.tflarrivals.gtfs
 import com.jdamcd.tflarrivals.GtfsSearch
 import com.jdamcd.tflarrivals.StopResult
 
-internal class MtaSearch(private val api: GtfsApi) : GtfsSearch {
+internal class MtaSearch(private val api: IGtfsApi) : GtfsSearch {
 
     private lateinit var stops: GtfsStops
 

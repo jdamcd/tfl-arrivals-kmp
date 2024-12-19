@@ -13,7 +13,7 @@ import com.jdamcd.tflarrivals.formatTime
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class TflArrivals(
-    private val api: TflApi,
+    private val api: ITflApi,
     private val settings: Settings
 ) : Arrivals,
     TflSearch {

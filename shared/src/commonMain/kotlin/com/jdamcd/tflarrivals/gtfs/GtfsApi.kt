@@ -12,23 +12,24 @@ import okio.buffer
 import okio.openZip
 import okio.use
 
-internal class GtfsApi(private val client: HttpClient) {
+interface IGtfsApi {
+    suspend fun fetchFeedMessage(url: String): FeedMessage
+    suspend fun downloadStops(url: String, folder: String = "gtfs"): String
+    fun readStops(outputDir: Path? = null): String
+}
+
+internal class GtfsApi(private val client: HttpClient) : IGtfsApi {
 
     private val baseDir = getFilesDir()
     private val defaultDir = "$baseDir/gtfs".toPath()
     private val stopsFileName = "stops.txt"
 
-    suspend fun fetchFeedMessage(url: String): FeedMessage {
+    override suspend fun fetchFeedMessage(url: String): FeedMessage {
         val bodyBytes = client.get(url).bodyAsBytes()
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
-    fun readStops(outputDir: Path = defaultDir): String {
-        val stopsPath = outputDir.resolve(stopsFileName)
-        return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
-    }
-
-    suspend fun downloadStops(url: String, folder: String = "gtfs"): String {
+    override suspend fun downloadStops(url: String, folder: String): String {
         val tempZipFile = "$baseDir/gtfs.zip".toPath()
         val outputDir = "$baseDir/$folder".toPath()
         try {
@@ -41,6 +42,12 @@ internal class GtfsApi(private val client: HttpClient) {
         } finally {
             FileSystem.SYSTEM.delete(tempZipFile)
         }
+    }
+
+    override fun readStops(outputDir: Path?): String {
+        val dir = outputDir ?: defaultDir
+        val stopsPath = dir.resolve(stopsFileName)
+        return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
     }
 
     private fun unpackZip(source: Path, destination: Path) {
