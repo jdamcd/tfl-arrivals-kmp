@@ -8,28 +8,23 @@ import io.ktor.client.statement.readRawBytes
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
+import okio.SYSTEM
 import okio.buffer
 import okio.openZip
 import okio.use
 
-interface IGtfsApi {
-    suspend fun fetchFeedMessage(url: String): FeedMessage
-    suspend fun downloadStops(url: String, folder: String = "gtfs"): String
-    fun readStops(outputDir: Path? = null): String
-}
-
-internal class GtfsApi(private val client: HttpClient) : IGtfsApi {
+internal class GtfsApi(private val client: HttpClient) {
 
     private val baseDir = getFilesDir()
     private val defaultDir = "$baseDir/gtfs".toPath()
     private val stopsFileName = "stops.txt"
 
-    override suspend fun fetchFeedMessage(url: String): FeedMessage {
+    suspend fun fetchFeedMessage(url: String): FeedMessage {
         val bodyBytes = client.get(url).bodyAsBytes()
         return FeedMessage.ADAPTER.decode(bodyBytes)
     }
 
-    override suspend fun downloadStops(url: String, folder: String): String {
+    suspend fun downloadStops(url: String, folder: String = "gtfs"): String {
         val tempZipFile = "$baseDir/gtfs.zip".toPath()
         val outputDir = "$baseDir/$folder".toPath()
         try {
@@ -44,8 +39,7 @@ internal class GtfsApi(private val client: HttpClient) : IGtfsApi {
         }
     }
 
-    override fun readStops(outputDir: Path?): String {
-        val dir = outputDir ?: defaultDir
+    fun readStops(dir: Path = defaultDir): String {
         val stopsPath = dir.resolve(stopsFileName)
         return FileSystem.SYSTEM.read(stopsPath) { readUtf8() }
     }

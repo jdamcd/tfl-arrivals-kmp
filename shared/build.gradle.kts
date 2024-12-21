@@ -7,11 +7,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.wire)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.mockmp)
 }
 
 kotlin {
+    jvm()
     listOf(
         macosArm64(),
         macosX64()
@@ -33,18 +32,17 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotest)
+        }
+
+        jvmTest.dependencies {
             implementation(libs.coroutines.test)
+            implementation(libs.mockk)
         }
 
         macosMain.dependencies {
             implementation(libs.ktor.client.macos)
         }
-    }
-}
-
-mockmp {
-    onTest {
-        withHelper()
     }
 }
 

@@ -2,24 +2,21 @@ package com.jdamcd.tflarrivals.tfl
 
 import com.jdamcd.tflarrivals.NoDataException
 import com.jdamcd.tflarrivals.Settings
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.kodein.mock.Mock
-import org.kodein.mock.generated.injectMocks
-import org.kodein.mock.tests.TestsWithMocks
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-internal class TflArrivalsTest : TestsWithMocks() {
+class TflArrivalsTest {
 
-    override fun setUpMocks() = mocker.injectMocks(this)
-
-    @Mock lateinit var api: ITflApi
-
-    private lateinit var settings: Settings
-
-    private val arrivals by withMocks { TflArrivals(api, settings) }
+    private val api = mockk<TflApi>()
+    private val settings = Settings()
+    private val arrivals = TflArrivals(api, settings)
 
     private val response = listOf(
         ApiArrival(123, "", "Platform 2", "outbound", "New Cross", 456),
@@ -30,7 +27,6 @@ internal class TflArrivalsTest : TestsWithMocks() {
 
     @BeforeTest
     fun setup() {
-        settings = Settings()
         settings.tflStopId = "123"
         settings.tflStopName = "Test Stop"
         settings.tflPlatform = "Platform 2"
@@ -38,55 +34,52 @@ internal class TflArrivalsTest : TestsWithMocks() {
     }
 
     @Test
-    fun `fetches latest arrivals`() = runBlocking {
-        everySuspending { api.fetchArrivals("123") } returns response
+    fun `fetches latest arrivals`() = runBlocking<Unit> {
+        coEvery { api.fetchArrivals("123") } returns response
 
         val latest = arrivals.latest()
 
         assertEquals(2, latest.arrivals.size)
         val first = latest.arrivals[0]
-        assertEquals("Crystal Palace", first.destination)
-        assertEquals("Due", first.time)
-        assertEquals(10, first.secondsToStop)
+        first.destination shouldBe "Crystal Palace"
+        first.time shouldBe "Due"
+        first.secondsToStop shouldBe 10
         val second = latest.arrivals[1]
-        assertEquals("New Cross", second.destination)
-        assertEquals("8 min", second.time)
-        assertEquals(456, second.secondsToStop)
+        second.destination shouldBe "New Cross"
+        second.time shouldBe "8 min"
+        second.secondsToStop shouldBe 456
     }
 
     @Test
-    fun `formats station name with filters`() = runBlocking {
-        everySuspending { api.fetchArrivals("123") } returns response
+    fun `formats station name with filters`() = runBlocking<Unit> {
+        coEvery { api.fetchArrivals("123") } returns response
 
         settings.tflDirection = "all"
         settings.tflPlatform = "Platform 2"
-        val first = arrivals.latest()
-        assertEquals("Test Stop: Platform 2", first.station)
+        arrivals.latest().station shouldBe "Test Stop: Platform 2"
 
         settings.tflDirection = "inbound"
         settings.tflPlatform = ""
-        val second = arrivals.latest()
-        assertEquals("Test Stop: Inbound", second.station)
+        arrivals.latest().station shouldBe "Test Stop: Inbound"
 
         settings.tflDirection = "all"
         settings.tflPlatform = ""
-        val third = arrivals.latest()
-        assertEquals("Test Stop", third.station)
+        arrivals.latest().station shouldBe "Test Stop"
     }
 
     @Test
-    fun `returns up to 3 arrivals`() = runBlocking {
+    fun `returns up to 3 arrivals`() = runBlocking<Unit> {
         settings.tflPlatform = ""
-        everySuspending { api.fetchArrivals("123") } returns response
+        coEvery { api.fetchArrivals("123") } returns response
 
         val latest = arrivals.latest()
 
-        assertEquals(3, latest.arrivals.size)
+        latest.arrivals shouldHaveSize 3
     }
 
     @Test
     fun `throws NoDataException if results are empty`() = runBlocking<Unit> {
-        everySuspending { api.fetchArrivals("123") } returns emptyList()
+        coEvery { api.fetchArrivals("123") } returns emptyList()
 
         assertFailsWith<NoDataException> {
             arrivals.latest()

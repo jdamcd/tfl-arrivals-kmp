@@ -1,23 +1,23 @@
 package com.jdamcd.tflarrivals
 
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ArrivalsTest {
 
     @Test
-    fun testFormatTimeDue() {
-        assertEquals("Due", formatTime(0))
+    fun `fomatTime as Due`() {
+        formatTime(0) shouldBe "Due"
     }
 
     @Test
-    fun testFormatTimeMultipleMinutes() {
-        assertEquals("5 min", formatTime(300))
+    fun `formatTime with multiple mins`() {
+        formatTime(300) shouldBe "5 min"
     }
 
     @Test
-    fun testFormatTimeBoundary() {
-        assertEquals("Due", formatTime(59))
-        assertEquals("1 min", formatTime(60))
+    fun `formatTime as Due below 1 min`() {
+        formatTime(59) shouldBe "Due"
+        formatTime(60) shouldBe "1 min"
     }
 }

@@ -8,15 +8,9 @@ import io.ktor.client.request.parameter
 import io.ktor.serialization.JsonConvertException
 import kotlinx.serialization.Serializable
 
-internal interface ITflApi {
-    suspend fun fetchArrivals(station: String): List<ApiArrival>
-    suspend fun searchStations(query: String): ApiSearchResult
-    suspend fun stopDetails(id: String): ApiStopPoint
-}
+internal class TflApi(private val client: HttpClient) {
 
-internal class TflApi(private val client: HttpClient) : ITflApi {
-
-    override suspend fun fetchArrivals(station: String): List<ApiArrival> = try {
+    suspend fun fetchArrivals(station: String): List<ApiArrival> = try {
         client.get("$BASE_URL/StopPoint/$station/Arrivals") {
             parameter("app_key", BuildKonfig.TFL_APP_KEY)
         }.body()
@@ -25,7 +19,7 @@ internal class TflApi(private val client: HttpClient) : ITflApi {
         emptyList()
     }
 
-    override suspend fun searchStations(query: String): ApiSearchResult = client
+    suspend fun searchStations(query: String): ApiSearchResult = client
         .get("$BASE_URL/StopPoint/Search") {
             parameter("app_key", BuildKonfig.TFL_APP_KEY)
             parameter("query", query)
@@ -33,7 +27,7 @@ internal class TflApi(private val client: HttpClient) : ITflApi {
             parameter("tflOperatedNationalRailStationsOnly", true)
         }.body()
 
-    override suspend fun stopDetails(id: String): ApiStopPoint = client
+    suspend fun stopDetails(id: String): ApiStopPoint = client
         .get("$BASE_URL/StopPoint/$id") {
             parameter("app_key", BuildKonfig.TFL_APP_KEY)
         }.body()

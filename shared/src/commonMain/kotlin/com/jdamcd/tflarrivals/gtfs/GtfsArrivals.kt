@@ -13,7 +13,7 @@ import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class GtfsArrivals(
-    private val api: IGtfsApi,
+    private val api: GtfsApi,
     private val clock: Clock,
     private val settings: Settings
 ) : Arrivals {

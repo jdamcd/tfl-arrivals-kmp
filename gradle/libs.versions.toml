@@ -9,8 +9,8 @@ dateTime = "0.6.1"
 wire = "5.1.0"
 okio = "3.9.1"
 koin = "4.0.0"
-mockmp = "2.0.0"
-ksp = "2.0.21-1.0.26"
+mockk = "1.13.14"
+kotest = "5.9.1"
 
 [libraries]
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -23,7 +23,10 @@ kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", 
 wire-runtime = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotest = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 
 [bundles]
 ktor-common = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization-kotlinx-json"]
@@ -34,6 +37,3 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-mockmp = { id = "org.kodein.mock.mockmp", version.ref = "mockmp" }
-
