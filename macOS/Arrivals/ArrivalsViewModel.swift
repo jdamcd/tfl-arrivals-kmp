@@ -1,5 +1,5 @@
+import ArrivalsLib
 import Foundation
-import TflArrivals
 
 @MainActor
 class ArrivalsViewModel: ObservableObject {

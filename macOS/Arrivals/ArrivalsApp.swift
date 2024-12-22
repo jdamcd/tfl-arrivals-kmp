@@ -1,5 +1,5 @@
+import ArrivalsLib
 import SwiftUI
-import TflArrivals
 
 @main
 struct ArrivalsApp: App {

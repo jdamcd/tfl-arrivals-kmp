@@ -478,7 +478,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Arrivals/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TfL Arrivals";
+				INFOPLIST_KEY_CFBundleDisplayName = Arrivals;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -490,7 +490,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					TflArrivals,
+					ArrivalsLib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jdamcd.Arrivals;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -522,7 +522,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Arrivals/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TfL Arrivals";
+				INFOPLIST_KEY_CFBundleDisplayName = Arrivals;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -534,7 +534,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					TflArrivals,
+					ArrivalsLib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jdamcd.Arrivals;
 				PRODUCT_NAME = "$(TARGET_NAME)";

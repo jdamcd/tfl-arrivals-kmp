@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TFL Arrivals"
+rootProject.name = "Arrivals"
 include(":shared")

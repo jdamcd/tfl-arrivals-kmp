@@ -16,7 +16,7 @@ kotlin {
         macosX64()
     ).forEach {
         it.binaries.framework {
-            baseName = "TflArrivals"
+            baseName = "ArrivalsLib"
         }
     }
 
@@ -55,7 +55,7 @@ wire {
 
 @Suppress("TooGenericExceptionCaught")
 configure<BuildKonfigExtension> {
-    packageName = "com.jdamcd.tflarrivals"
+    packageName = "com.jdamcd.arrivals"
 
     val props = Properties()
     try {

@@ -1,5 +1,5 @@
+import ArrivalsLib
 import SwiftUI
-import TflArrivals
 
 struct MtaSettingsView: View {
     @ObservedObject private var viewModel = MtaSettingsViewModel()

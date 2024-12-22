@@ -1,5 +1,5 @@
+import ArrivalsLib
 import SwiftUI
-import TflArrivals
 
 struct SettingsView: View {
     let transitSystem = ["TfL", "MTA", "Custom GTFS"]

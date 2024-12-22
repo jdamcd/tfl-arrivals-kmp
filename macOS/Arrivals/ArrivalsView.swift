@@ -1,8 +1,8 @@
+import ArrivalsLib
 import Combine
 import Foundation
 import SettingsAccess
 import SwiftUI
-import TflArrivals
 
 struct ArrivalsView: View {
     @ObservedObject var viewModel = ArrivalsViewModel()

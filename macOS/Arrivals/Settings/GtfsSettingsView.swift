@@ -1,5 +1,5 @@
+import ArrivalsLib
 import SwiftUI
-import TflArrivals
 
 struct GtfsSettingsView: View {
     private let settings = MacDI().settings
