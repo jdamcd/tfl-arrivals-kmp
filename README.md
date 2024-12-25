@@ -1,8 +1,11 @@
-# TfL Arrivals
+# Arrivals
 
-See your local TfL train station arrivals board in your status bar! It's a MacOS app, but the API layer is built with Kotlin Multiplatform for the flexibility to add more UI targets later.
+Arrivals is a Kotlin Multiplatform project for live transit times. The first target is a MacOS status bar app. Supported data sources include:
+- TfL API for London Underground, Overground, DLR, etc.
+- MTA GTFS feeds for NYC Subway
+- Custom GTFS feeds for other transit systems (many can be found [here](https://mobilitydatabase.org))
 
-![Screenshot: arrivals app in the MacOS status bar](screenshot.png)
+![Screenshot: Arrivals app in the MacOS status bar](screenshot.png)
 
 ## Attribution
 
