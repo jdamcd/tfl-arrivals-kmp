@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Arrivals"
-include(":shared")
+include(":shared", ":cli")

@@ -35,6 +35,11 @@ kotlin {
             implementation(libs.kotest)
         }
 
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.jvm)
+            implementation(libs.logging.nop)
+        }
+
         jvmTest.dependencies {
             implementation(libs.coroutines.test)
             implementation(libs.mockk)
