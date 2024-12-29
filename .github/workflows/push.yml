@@ -6,6 +6,11 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   shared:
     name: Shared
@@ -33,7 +38,7 @@ jobs:
       run: ./gradlew allTests
 
     - name: Publish test results
-      uses: dorny/test-reporter@v1.6.0
+      uses: dorny/test-reporter@v1.9.1
       if: always()
       with:
         name: Kotlin results
