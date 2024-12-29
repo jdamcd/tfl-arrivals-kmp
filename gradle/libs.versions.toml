@@ -11,6 +11,8 @@ okio = "3.9.1"
 koin = "4.0.0"
 mockk = "1.13.14"
 kotest = "5.9.1"
+logging = "2.0.16"
+clikt = "5.0.2"
 
 [libraries]
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -24,7 +26,8 @@ kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", 
 wire-runtime = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-logging-nop = { group = "org.slf4j", name = "slf4j-nop", version = "2.0.16" }
+logging-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "logging" }
+clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }

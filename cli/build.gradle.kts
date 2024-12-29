@@ -11,4 +11,5 @@ dependencies {
     implementation(project(":shared"))
     implementation(libs.koin)
     implementation(libs.kotlin.coroutines)
+    implementation(libs.clikt)
 }

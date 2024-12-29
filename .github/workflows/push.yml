@@ -41,7 +41,7 @@ jobs:
       uses: dorny/test-reporter@v1.9.1
       if: always()
       with:
-        name: Kotlin results
+        name: Test results
         path: '**/build/test-results/**/TEST-*.xml'
         reporter: java-junit
         fail-on-error: true

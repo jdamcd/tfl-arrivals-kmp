@@ -56,8 +56,7 @@ internal class GtfsApi(private val client: HttpClient) {
                 val fileToWrite = destination.resolve(relativePath)
                 fileToWrite.createParentDirectories()
                 FileSystem.SYSTEM.sink(fileToWrite).buffer().use { sink ->
-                    val bytes = sink.writeAll(source)
-                    println("Unzipped: $relativePath to $fileToWrite; $bytes bytes written")
+                    sink.writeAll(source)
                 }
             }
         }
