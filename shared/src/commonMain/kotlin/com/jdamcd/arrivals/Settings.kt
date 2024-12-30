@@ -2,7 +2,6 @@ package com.jdamcd.arrivals
 
 expect class Settings() {
     var mode: String
-    var tflStopName: String
     var tflStopId: String
     var tflPlatform: String
     var tflDirection: String
@@ -19,8 +18,6 @@ object SettingsConfig {
     const val MODE_TFL = "tfl"
     const val MODE_GTFS = "gtfs"
 
-    const val TFL_STOP_NAME = "selected_stop_name"
-    const val TFL_STOP_NAME_DEFAULT = "Shoreditch High Street"
     const val TFL_STOP_ID = "selected_stop_id"
     const val TFL_STOP_ID_DEFAULT = "910GSHRDHST"
     const val TFL_PLATFORM = "tfl_platform"

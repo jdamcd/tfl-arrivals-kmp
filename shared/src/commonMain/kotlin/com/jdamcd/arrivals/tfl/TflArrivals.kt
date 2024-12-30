@@ -51,6 +51,7 @@ internal class TflArrivals(
     }
 
     private fun formatArrivals(apiArrivals: List<ApiArrival>): ArrivalsInfo {
+        val station = stationInfo(apiArrivals.firstOrNull()?.stationName ?: "")
         val arrivals =
             apiArrivals
                 .asSequence()
@@ -73,14 +74,16 @@ internal class TflArrivals(
                 }
                 .toList()
         return ArrivalsInfo(
-            station = stationInfo(),
+            station = station,
             arrivals = arrivals
         )
     }
 
-    private fun stationInfo(): String {
-        val station = formatStation(settings.tflStopName)
-        return if (settings.tflPlatform.isNotEmpty()) {
+    private fun stationInfo(name: String): String {
+        val station = formatStation(name)
+        return if (station.isEmpty()) {
+            station
+        } else if (settings.tflPlatform.isNotEmpty()) {
             "$station: ${settings.tflPlatform}"
         } else if (settings.tflDirection != SettingsConfig.TFL_DIRECTION_DEFAULT) {
             "$station: ${formatDirection(settings.tflDirection)}"

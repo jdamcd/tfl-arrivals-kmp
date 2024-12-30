@@ -19,16 +19,15 @@ class TflArrivalsTest {
     private val arrivals = TflArrivals(api, settings)
 
     private val response = listOf(
-        ApiArrival(123, "", "Platform 2", "outbound", "New Cross", 456),
-        ApiArrival(124, "", "Platform 2", "outbound", "Crystal Palace Rail Station", 10),
-        ApiArrival(125, "", "Platform 1", "inbound", "Dalston Junction", 10),
-        ApiArrival(126, "", "Platform 1", "inbound", "Highbury & Islington Underground Station", 456)
+        ApiArrival(123, "Test Stop", "Platform 2", "outbound", "New Cross", 456),
+        ApiArrival(124, "Test Stop", "Platform 2", "outbound", "Crystal Palace Rail Station", 10),
+        ApiArrival(125, "Test Stop", "Platform 1", "inbound", "Dalston Junction", 10),
+        ApiArrival(126, "Test Stop", "Platform 1", "inbound", "Highbury & Islington Underground Station", 456)
     )
 
     @BeforeTest
     fun setup() {
         settings.tflStopId = "123"
-        settings.tflStopName = "Test Stop"
         settings.tflPlatform = "Platform 2"
         settings.tflDirection = "all"
     }
@@ -78,7 +77,7 @@ class TflArrivalsTest {
     }
 
     @Test
-    fun `throws NoDataException if results are empty`() = runBlocking<Unit> {
+    fun `throws NoDataException on empty results`() = runBlocking<Unit> {
         coEvery { api.fetchArrivals("123") } returns emptyList()
 
         assertFailsWith<NoDataException> {

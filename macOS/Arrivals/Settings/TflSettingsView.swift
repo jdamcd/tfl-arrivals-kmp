@@ -140,7 +140,6 @@ private class TflSettingsViewModel: ObservableObject {
     }
 
     func save(stopPoint: StopResult, platformFilter: String, directionFilter: String) {
-        settings.tflStopName = stopPoint.name
         settings.tflStopId = stopPoint.id
         settings.tflPlatform = platformFilter
         settings.tflDirection = directionFilter
