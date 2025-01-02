@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.command.main
 import com.github.ajalt.clikt.parameters.groups.OptionGroup
 import com.github.ajalt.clikt.parameters.groups.defaultByName
 import com.github.ajalt.clikt.parameters.groups.groupChoice
+import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.jdamcd.arrivals.Arrivals
@@ -29,6 +30,7 @@ private class Cli :
     private val settings: Settings by inject()
 
     val mode by option()
+        .help("Transit feed type")
         .groupChoice("tfl" to Tfl(), "gtfs" to Gtfs())
         .defaultByName("tfl")
 
@@ -50,7 +52,7 @@ private class Cli :
             is Tfl -> {
                 val mode = mode as Tfl
                 settings.mode = SettingsConfig.MODE_TFL
-                mode.stationId?.let { settings.tflStopId = it }
+                mode.station?.let { settings.tflStopId = it }
                 mode.platform?.let { settings.tflPlatform = it }
                 mode.direction?.let { settings.tflDirection = it }
             }
@@ -58,9 +60,9 @@ private class Cli :
             is Gtfs -> {
                 val mode = mode as Gtfs
                 settings.mode = SettingsConfig.MODE_GTFS
-                mode.stopId?.let { settings.gtfsStop = it }
-                mode.realtimeUrl?.let { settings.gtfsRealtime = it }
-                mode.scheduleUrl?.let { settings.gtfsSchedule = it }
+                mode.stop?.let { settings.gtfsStop = it }
+                mode.realtime?.let { settings.gtfsRealtime = it }
+                mode.schedule?.let { settings.gtfsSchedule = it }
             }
         }
     }
@@ -69,13 +71,15 @@ private class Cli :
 private sealed class TransitProvider(name: String) : OptionGroup(name)
 
 private class Tfl : TransitProvider("TfL options") {
-    val stationId by option()
-    val platform by option()
-    val direction by option().choice("inbound", "outbound", "all")
+    val station by option().help("Station ID")
+    val platform by option().help("Platform filter (optional)")
+    val direction by option()
+        .choice("inbound", "outbound", "all")
+        .help("Direction filter (optional)")
 }
 
 private class Gtfs : TransitProvider("GTFS options") {
-    val stopId by option()
-    val realtimeUrl by option()
-    val scheduleUrl by option()
+    val stop by option().help("Stop ID")
+    val realtime by option().help("GTFS-RT feed URL")
+    val schedule by option().help("GTFS schedule URL")
 }
